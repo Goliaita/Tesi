@@ -1,0 +1,184 @@
+%******************************************************************
+%
+% Template tesi Latex realizzato da:
+% Giuseppe Morleo
+% Antonio Mariani
+% Andrea Della Monaca
+%
+% Per compilare la bibliografia: pdflatex main, bibtex bib, pdflatex main
+%
+%******************************************************************
+
+\documentclass[a4paper,12pt,oneside]{book}
+\usepackage{package}
+
+\graphicspath{{./images/}}					% cartella per le immagini
+
+\title{Titolo Tesi}
+\author{Nome Cognome}
+
+%******************************************************************
+% Configurazione listati codici C
+%******************************************************************
+\lstset{%
+	captionpos=b,
+	language=c,
+	basicstyle =\small\ttfamily,
+	breaklines=true,
+	basicstyle=\linespread{0.8},
+	breakatwhitespace=true,
+	frame=lines,
+	numbers=left,
+	numberstyle=\footnotesize,
+}
+
+%******************************************************************
+% Impostazioni di amsmath, amssymb, amsthm
+%******************************************************************
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{definition}
+\newtheorem{lemma}{Lemma}
+
+%******************************************************************
+% Intestazione e pie pagina 
+%******************************************************************
+
+%\cfoot{}
+
+\newcommand\blankpage{%
+	\clearpage
+	\thispagestyle{plain}
+	\null
+	\newpage}
+
+% Prima pagina del capitolo
+\fancypagestyle{plain}
+{
+	\fancyhead{}
+	\fancyfoot{}
+	\fancyfoot[R]{\thepage}					% numerazione a destra
+	\renewcommand{\headrulewidth}{0pt}
+}
+
+% Tutte le altre pagine
+\pagestyle{fancy}
+\fancyfoot{}
+\fancyhead{}
+%\fancyhead[R]{\slshape \leftmark}
+\fancyhead[R]{\nouppercase{\sffamily Chapter \leftmark}}
+\fancyfoot[R]{\thepage}
+\headheight = 20pt
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{}}
+
+
+%******************************************************************
+% Inizio documento
+%******************************************************************
+
+\begin{document}
+	
+%******************************************************************
+% Frontespizio
+%******************************************************************
+
+	\thispagestyle{plain}
+	\input{extra/frontespizio}
+	\frontmatter
+	\blankpage
+	
+%******************************************************************
+% Citazione
+%******************************************************************
+
+	\thispagestyle{plain}
+	\null\vspace{\stretch{1}}
+	\begin{flushright}
+			\slshape
+			Lorem ipsum dolor sit amet, consectetuer adipiscing elit. \\
+			Ut purus elit, vestibulum ut, placerat ac, adipiscing vitae, felis. \\
+			Curabitur dictum gravida mauris. \\ \medskip
+		--- Donald Ervin Knuthyu
+	\end{flushright}
+	
+	\vspace{\stretch{2}}\null
+	\blankpage
+	
+%******************************************************************
+% Ringraziamenti
+%******************************************************************
+	
+	\input{extra/acknowledgments}
+	\newpage
+	
+%******************************************************************
+% Abstract
+%******************************************************************
+
+	\thispagestyle{plain}
+	\begin{center}
+		\chapter*{}
+		{\Huge \textbf{Abstract}}\\
+		\vspace{15mm}
+		\lipsum[1]
+	\end{center}
+	\blankpage	
+	
+%******************************************************************
+% Indici
+%******************************************************************
+
+	\tableofcontents
+	\listoftables
+	\listoffigures	
+	
+%******************************************************************
+% Parte centrale
+%******************************************************************
+
+	\frontmatter	{\tiny }
+	\mainmatter
+		
+	% 1° Capitolo introduttivo
+	\chapter{Introduction}
+	\label{cap:chapter1}
+	\input{chapter/chapter1}
+	
+	% 2° Stato dell'arte
+	\chapter{Related Works}
+	\label{cap:chapter2}
+	\input{chapter/chapter2}
+	
+	% 3° Descrizione algoritmo
+	\chapter{Algorithm Design}
+	\label{cap:chapter3}
+	\input{chapter/chapter3}
+	
+	% 4° Implementazione
+	\chapter{Implementation}
+	\label{cap:chapter4}
+	\input{chapter/chapter4}
+	
+	% 5° Risultati
+	\chapter{Experimental Results}
+	\label{cap:chapter5}
+	\input{chapter/chapter5}
+	
+	% 6° Conclusione
+	\chapter{Conclusion}
+	\label{cap:chapter6}
+	\input{chapter/chapter6}
+
+	\blankpage
+	
+%******************************************************************
+% Parte finale
+%******************************************************************
+
+	\bibliography{bib} 
+	\bibliographystyle{ieeetr}
+	
+\end{document}
