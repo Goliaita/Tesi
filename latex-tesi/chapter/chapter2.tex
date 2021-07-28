@@ -146,7 +146,6 @@ by the simple iterative linear clustering algorithm as proposed regions. A CNN m
 this approach showed higher performance than conventional ML methods, it has a potential limitation in region proposal. The advantage of the end-to-end CNN architecture
 is that they are able to use richer features for accurate localization, especially when the images vary greatly. However, superpixels are subject to image variation and
 may not provide optimal region proposals. The generalizability of this approach, therefore, is most likely lower than that of end-to-end methods.
-
 Many studies have also investigated semantic segmentation-based approaches for plant/plant organ counting. CNN architectures for semantic segmentation were first used to
 obtain plant/plant-organ masks. Then, the obtained masks were post-processed using conventional computer vision methods to isolate individual plants/plant organs so that
 the objects could be counted. An obvious concern is that although CNNs could provide accurate semantic masks, counting accuracy may still suffer from inaccurate
@@ -156,9 +155,7 @@ model training. Two types of image synthesizing methods have been proposed: rule
 on predefined growth rules. GAN-based approaches,however, could generate synthetic images without sacrificing leaf structure. Thus, a method combining rule-based and
 GAN-based methods was developed for image synthesizing.
 
-
-
-\section{3D Phenotyping Platform for Komatsuna dataset}
+\section{3D Phenotyping for Komatsuna dataset}
 In this paper, they built a platform to capture overhead views of a plant and measure the environmental conditions around it. They first
 selected a plant species, Komatsuna, which is a Japanese mustard spinach and a leafy vegetable. It can be grown indoors, and is known to
 be resistant to pests and grows very fast. Hydroponic culture is an alternative method.It is clean, irrigation and fertilization are automated
@@ -172,7 +169,6 @@ consists of an RGB camera and a structured light or time-of-flight depth camera 
 early stages of growth is small, depth images usually need to be captured at a closer distance from the plant to magnify the size in the
 captured images. However, some RGB-D cameras are not designed for such short depth ranges. In their platform, they used Intel RealSense SR300
 which is specifically optimized for short-range acquisition.
-
 They created two types of datasets using an RGB-D camera and a multiple RGB camera at approximately 2400 lux, 28 °C, and 30\% humidity.
 
 \subsection{RGB-D Dataset}
@@ -193,10 +189,58 @@ segmentation of spatiotemporal instances for multiple views. In the relevant lit
 performed using a single view image, and may be more difficult than using multiple views.
 
 
-\section{}
+\section{Leaf Instance Segmentation}
+In this paper, the authors aim to implement a novel strategy to exploit the global feature of invariant leaf shapes across plant species,
+and create an automatic generation of leaf patterns for incorporating leaf shape knowledge. Thus, the proposed framework enables the automatic
+analysis of different plant species with rich leaf shape variation, thus alleviating the current bottleneck of annotated data.
 
+They present a novel segmentation of the leaf instance with a top-down view of plant images in high-throughput phenotyping platforms.
+The acquired images suffer from uneven illumination, moss, and shadows. To address the problem of scene variability, a statistical
+image segmentation algorithm Mean-shift Bandwidths Searching Latent Dirichlet Allocation is employed. In order to find the optimal
+MeanShift bandwidth for stable segmentation, the authors used LUV distances between topics. However, the color of moss is very similar
+to plant leaves, so using LUV distance is not suitable for the studied images. To solve this problem, the authors employed the distance between
+texture descriptors.
+Plant leaves spread out from the center showing different orientations, so finding candidate regions to leaves will require examining different
+combinations of orientations and widths in the RGB image. To constrain the search for possible leaf candidate regions, first the segmented image
+is transformed to polar coordinates. The center and radius required for polar transformations are calculated based on its skeletal image. The center
+is extracted based on the betweenness centrality of the nodes in the skeleton image. The goal of nominating leaf candidates is to extract leaf representatives
+that can be processed by the model generation step. Their algorithm represents the image as a graph with a fixed number of nodes and neighboring nodes
+connected by weighted edges. The seed extraction strategy based on the hierarchical representation of slices and its use in the random walk results in
+an under-segmentation of the plant image, this is due to the connection property of vertical slices. However, this property also allows for the optimal
+segmentation of non-occluded leaves that exist as disconnected regions in the plant image. Given the output of the random path instance, they automatically
+isolate the non-occluded leaves by exploiting the symmetry property of the leaves around the medial axis. Two classes of leaf and non-leaf candidates are
+generated, then, multiple leaf candidates are removed from the segmented image to obtain a modified mask. If the modified mask belongs to a small area of
+the input segmented mask, then these leaf candidates are the final instances of the leaves extracted from the proposed picture. Otherwise, these candidates
+form a part of the output instance and the modified mask is used as input for the multi-leaf matching model.
+Leaf templates have a great influence on matching multi-leaf templates. Thus, to generate templates that accommodate large variations in
+the shape and size of the leaves of a plant species in its growth cycle. A post-processing pipeline is used to remove stems based on the Hough
+transform. The Hough transform generates a parameter space, where each pixel in an x-y image space is mapped to a line of an m-c parameter space
+and the peaks represent the lines. Since the canonical leaf shape is used, peaks with m centered around zero degrees correspond to stems. Since
+the multi-leaf template matching algorithm is sensitive to rotation and scale, the representative shapes are varied using geometric transformations
+such as scaling and rotation. This database of templates with different shapes, sizes, and orientations, generated through real-time image sampling,
+is employed in multi-leaf template matching. For each pattern, the algorithm first computes the position of the minimum matching Chamfer, then, an
+optimal set of leaf candidates based on an objective function with three terms: 
+\begin{itemize}
+    \item average CM of the selected leaves that promotes the selection of leaf patterns with the minimum CM distance;
+    \item the number of estimated leaves selects an optimal number of leaf patterns; 
+    \item the distance of the synthesized mask from the selected leaves and the target image mask is selected and that when disposed generates the target mask accurately.
+\end{itemize}
 
+Overall, they observed that the output of the Gaussian mixture model appears noisy, while K-means, Otsu's threshold based on excess green features,
+and Minervini's algorithm excessively segment the foreground resulting in a disconnected vegetation region. On the other hand, significant agreement
+with ground truth can be observed for the modified MSBS-LDA algorithm using texture-based distance metrics. One approach was based on the orientation
+field map and leaf tips of the polar transformed image. For leaf tip detection, we chose the Harris-Stephens angle detector. The second approach was
+based on the skeletal image of the polar transformed image. Here, the path from the end nodes of the image is traversed and a minimum deviated direction
+is employed at the junctions. Based on the quantitative result, it was observed that due to the oversegmentation of the non-overlapping leaves, the instance
+output failed the symmetry threshold, however, the instances of the used approaches that labeled as leaf candidates showed good agreement with the corresponding
+non-overlapping leaves of the ground truth. It should be noted that the number of leaf candidates extracted plays an important role in the extraction of
+representative shapes, especially at later growth stages. Based on the database of plant phenotyping images, for early and middle growth stage images,
+multi-leaf pattern matching was not frequently used because the generated leaf candidates comprised 90\% of the input segmented mask. This was due to the
+non-overlapping scenarios observed in these images. However, it also led to the neglect of leaves that were highly. The comparative study demonstrates the
+efficiency of our proposed structure in relation to different plant species. The strategy to extract non-occluded leaves involves the automatic generation
+of shape priors, which can be further used to segment individual leaves into overlapping regions in the image.
 
+\section{Multi-Task Plant Phenotyping}
 
 
 
