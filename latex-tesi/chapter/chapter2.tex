@@ -158,8 +158,42 @@ GAN-based methods was developed for image synthesizing.
 
 
 
+\section{3D Phenotyping Platform for Komatsuna dataset}
+In this paper, they built a platform to capture overhead views of a plant and measure the environmental conditions around it. They first
+selected a plant species, Komatsuna, which is a Japanese mustard spinach and a leafy vegetable. It can be grown indoors, and is known to
+be resistant to pests and grows very fast. Hydroponic culture is an alternative method.It is clean, irrigation and fertilization are automated
+so that plant growth is accelerated, fewer agricultural chemicals are needed than soil culture, and replanting failures do not normally occur.
+Another advantage is that plant root systems can also be measured because roots growing in water can be captured through cameras. For lighting,
+they used LED lights, with lighting durations and colors programmable using the software provided. To measure ambient temperature, humidity, and
+light intensity, they used a Sony MESH, where light intensity is measured, which can be measured in lux. However, lux may not be appropriate in
+a precise sense because it is based on the property of human eyes. To measure the pure energy of lights, photosynthetic photon flux density
+(PPFD) is more appropriate in biology. In their platform, lux is used as a simplified index in environmental information. An RGB-D camera
+consists of an RGB camera and a structured light or time-of-flight depth camera based on infrared lights. Since the leaf size of plants in the
+early stages of growth is small, depth images usually need to be captured at a closer distance from the plant to magnify the size in the
+captured images. However, some RGB-D cameras are not designed for such short depth ranges. In their platform, they used Intel RealSense SR300
+which is specifically optimized for short-range acquisition.
+
+They created two types of datasets using an RGB-D camera and a multiple RGB camera at approximately 2400 lux, 28 °C, and 30\% humidity.
+
+\subsection{RGB-D Dataset}
+Since one RGB-D camera was attached to capture the entire part of the toolkit, each plant region was manually segmented as a plant image
+and labeled as a label image. In order to use the dataset for temporal leaf tracking, the same leaf label was assigned to the same leaf in
+images captured at different times. The original camera resolution was 640 × 480 and the resolution of the plant images was, for example,
+166 × 190 pixels. Because the viewpoints of the RGB and depth images were aligned by the camera library, the labels were valid for both images.
+Due to the mismatch between RGB and depth camera, the resulting images were not aligned, so the depth image was aligned into an RGB image in our
+platform. For this reason, we provided the original depth image and a transformation matrix from the depth image viewpoint to the RGB image
+viewpoint so that the point cloud could also be transformed as needed without any interpolation.
+
+\subsection{Multi-View Dataset}
+For the multiview dataset, they captured five plants from three different viewpoints and manually segmented them into an individual plant
+like images. To use the dataset for spatiotemporal tracking of leaves, the same leaf label was assigned to the same leaf in images
+captured with different cameras at different times. The ground truth of the 3D shape was not measured because it was not easy to
+capture more accurate 3D shapes than when using multiple high-resolution images. This dataset will be useful for evaluating the
+segmentation of spatiotemporal instances for multiple views. In the relevant literature, instance segmentation has typically been
+performed using a single view image, and may be more difficult than using multiple views.
 
 
+\section{}
 
 
 
