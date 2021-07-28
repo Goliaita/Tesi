@@ -5,6 +5,200 @@
 
 %************************************************
 
+\section{Plant Phenotyping}
+
+Plant phenotyping has been recognized as a bottleneck for improving the efficiency of breeding programs. In recent years, image-based approaches
+have shown great potential for high-throughput plant phenotyping, resulting in an increased focus on image-based plant phenotyping.
+To meet the world's growing demand, current crop productivity must be roughly doubled by 2050, due to global population growth that may exceed
+9 billion by 2050 and 11 billion by 2100. Over the past years, various HTP solutions have been developed to improve phenotyping capability
+and throughput, including tower systems, gantry systems, mobile ground systems, and low and high-altitude aerial systems, one obvious trend
+has been noted in recent HTP systems, computer vision. Cameras have been used more frequently because of their extensive ability to extract
+complex features. 2D images can provide spatial information of a scene plus an additional dimension of data such as spectral information.
+3D images can provide a 3D structure of a scene that can be used to calculate morphological features of objects. Finally, 2.5D images retain
+information about the image plane structure, which is similar to that of 2D images, and capture depth information about a scene, which can
+be used to reconstruct the 3D structure of that scene. one of the first operations to be performed for phenotyping is to identify and
+define the phenotypic traits to be measured, which largely determine the use of appropriate imaging modalities for plant detection.
+Measuring phenotypic traits usually requires one or more computer vision tasks that can be solved by developing new algorithms or
+improving existing ones through conventional image/signal processing, machine learning, or a combination of them. Conventional machine-learning
+based approaches have generally improved generalizability, but most still cannot meet the requirements for current phenotypic purposes.
+Deep learning is a subset of machine learning and enables hierarchical learning of data. The key benefit is that features will be learned
+automatically from the input data, thus breaking down barriers to developing intelligent solutions for different of applications.
+A commonly used DL architecture is deep convolutional neural networks(CNNs), that were developed for image classification and eventually
+demonstrated better performance than humans on the same dataset.
+
+\section{Convolutional Neural Networks}
+Most imaging-based phenotyping applications essentially require solutions for one or more tasks related to image classification, object detection, and segmentation.
+
+\subsection{Image Classification}
+Image classification is one of the main tasks of computer vision and aims to assign images with predefined class labels.
+The development of modern CNNs for image classification can be grouped into three phases:
+\begin{itemize}
+    \item emergence of modern CNNs;
+    \item intensive development and improvement of the CNN architecture;
+    \item reinforcement learning for the design of the CNN architecture.
+\end{itemize}
+After these improvements, representative CNNs can now usually outperform humans in image classification for various datasets. It should be noted that the performance
+improvement following the change in CNN architecture was highly dependent on human expertise and tuning efforts, which means that improving the CNN architecture
+could be as laborious as feature engineering in traditional ML. A reinforcement learning framework was introduced to search for optimal convolutional cells on a small
+annotated dataset, and the resulting cells were stacked in different ways and transferred to an unknown large dataset. In addition to performance improvement, studies
+have been conducted to understand the mechanism of CNNs. This leads to the development of techniques towards explainable artificial intelligence that helps in developing
+interpretable and inclusive machine learning models. The study also showed that learned features could be generalized to various classifiers, suggesting that CNNs could
+learn general representations of images rather than specific features for classification. Subsequent studies have continued in this direction and developed various
+gradient-based methods that can visualize the importance of features for classification results. Commonly used methods include guided backpropagation, gradient-weighted
+class activation mapping, and layered relevance propagation.
 
 
-\section{Voxel Based}
+\subsection{Object Detection}
+Object detection attempts to detect and classify all potential objects in a given image. The use of CNNs for object detection can be categorized into two groups:
+one-stage and two-stage CNN architecture. Two-stage models first detect candidate object regions and then classify the candidate regions into different object categories.
+The OverFeat framework was developed to use a single CNN to extract features for training classifiers and regressors separately. The trained classifiers and regressors
+were used to predict class labels and bounding box coordinates, respectively, for candidate region of interest generated using a sliding window method.
+
+Three key techniques in the CNN architecture of the RCNN family were identified, including the region proposal network, the region-of-interest pooling operation, and
+the multitask loss function. A RPN was developed to generate ROIs of candidate objects using features extracted from CNNs, which simultaneously saved processing time
+and increased the accuracy of the region proposal. A ROI pooling operation was developed to extract a fixed number of features from ROIs of various sizes, thus avoiding
+repeated computation of features for different ROIs. A multitask loss function was used to unify the training process, which allowed for a training process for object
+detection. 
+
+Representative one-stage models include the you-onlylook-once family and the single-shot detector framework. A critical problem, however, has been
+discovered for these one-stage models: an extreme imbalance in the number of object and background regions. Most image regions contain only background information,
+providing little contribution to the model training process. However, if detection accuracy is the most important factor to consider, two-stage models would be
+the option; otherwise, single-stage models provide better computational efficiency for embedded systems and real-time applications.
+
+\subsection{Image Segmentation}
+Semantic segmentation seeks to provide masks for objects with the same semantic meaning, while instance segmentation seeks to provide individual objects in a given image.
+These in general can be divided into two categories: those encoder-decoder based, and those based on detection. The encoder-decoder-based is divided into two phases.
+The encoding phase uses CNNs to extract semantically meaningful feature maps from the input images, and the decoding phase uses transposed convolution for upsampling
+the extracted feature maps to labels. A detection-based framework is based on the CNN architecture for object detection. Several studies have explored the use of
+object detection models for instance segmentation, including concurrent detection and segmentation based on RCNN and DeepMask based on Faster RCNN.
+
+\section{CNN Applied to Plant Phenotyping}
+\subsection{Plant Development}
+Morphological changes in plant shoots are critical in describing plant development. Canopy cover and leaf area are two commonly used parameters to quantify plant
+growth and development. In order to segment plants many studies used color-based features, but usually had imperfect segmentation because plant color could have large
+variations due to illumination, shade, occlusion, and so forth. Most studies conducted on CNN in plant phenotyping consider it a semantic segmentation task and use
+an encoder-decoder-based CNN architecture for processing. Although these studies have shown improved segmentation accuracy, annotation of training data can be
+extremely difficult. To solve this problem, one study attempted to generate synthetic images with semantic annotations automatically for training the CNN model.
+The combination of synthetic and real images would improve the generalizability of CNNs for plant segmentation and thus the accuracy of growth analysis.
+The researchers also combined CNNs with other DL methods for characterizing plant development. CNNs were used as a feature extractor to encode the spatial
+state of plants at individual growth stages, and RNNs were used to incorporate all spatial encodings to learn the temporal changes of plants. In this way,
+plant growth patterns could be fully encoded by neural networks to reveal differences between cultivars and treatment groups. This indirect phenotyping scheme
+could be particularly useful for selection-oriented programs, but explaining selection would be a significant challenge and barrier to many research studies that
+aim to understand the mechanism of many plant responses. In addition to morphological measurements, CNNs could be used to monitor some plant development events
+such as plant lodging. A new CNN architecture (LodgeNet) was developed by integrating a custom 7-layer CNN model with handcrafted features. Compared with
+10 well-established CNN architectures, LodgeNet provided comparable or better performance on differentiation between allurement and regular plots, but with a
+significant improvement in processing speed.
+
+\subsection{Plant Stress Phenotyping}
+Plant stress phenotyping aims to identify and evaluate plant responses to abiotic and biotic stresses, providing information for selection of accession lines
+with high stress resistance and tolerance in breeding programs and understanding of intrinsic mechanisms in genetics/genomics studies.
+Plant stress phenotyping can be categorized into four stages:
+\begin{itemize}
+\item identification (presence of stress);
+\item classification (type of stress); 
+\item quantification (severity of stress);
+\item prediction (possibility of stress occurrence).
+\end{itemize}
+The development of image classification-based approaches can be divided into two phases. In the first phase, studies have intensively investigated known
+and customized CNN architectures because of the availability of annotated datasets and the simplicity of implementing and training CNN for image classification.
+Data annotation for image classification is also relatively easy, so a large number of images in a newly collected dataset can be annotated in reasonable time and
+cost, especially when a proper data collection procedure is used. As a result, studies related to plant stress detection typically have a sufficient number of
+images annotated for model training. In the second phase, pioneering studies sought to understand the reasons leading to the high performance of CNNs for stress
+identification and classification, because understanding would not only help to improve CNNs but also ensure the biological correctness of the results obtained.
+Although some studies have adopted deconvolution layers to visualize activated pixels in different convolution layers, the visualization results have not been
+used to compare with human evaluation or correlate with biological knowledge. Compared with the first phase studies, the two pioneering studies demonstrated the importance of
+understanding the mechanism of CNNs for stress phenotyping, as well as the potential for quantifying stress severity. Image annotation is still recognized as a limiting factor
+for the use of many DL algorithms, so the researchers investigated the use of generative adversarial networks to generate synthetic images for training CNN models for
+plant stress detection and classification. A very recent study explored the use of a custom CNN architecture to detect plant diseases in hyperspectral images.
+The novelty of the custom architecture is the use of a 3D convolution operation that can directly convolve spatial and spectral information into hypercubes.
+This would not only inspire future studies related to plant stresses, but also allow the reanalysis of many previous hyperspectral images collected for plant
+stress analysis. With improved detection accuracy, subtle differences in stress between cultivars/treatments can be revealed to improve our understanding of plant
+responses to stresses.
+
+\subsection{Plant Counting}
+Counting plants and plant organs is critical to characterizing plant development.
+Regression or image classification is the simplest and most straightforward way for fruit/organ counting from the perspective of technical development.
+For regression-based methods, a major modification was made that replaced the softmax layer of a CNN with a single neuron for regression of numerical values.
+This simple end-to-end counting solution provided high accuracy for counting fruit and leaves from plants. A particular challenge of regression-based solutions
+is the limited availability of annotated images, which leads to many potential problems such as poor generalizability of the model. To address this issue,
+one study attempted to generate synthetic data of tomatoes to increase data availability and diversity. Although the trained CNNs achieved 91\%
+counting accuracy on real images, the study tested only red tomatoes, which have distinctive color characteristics from the background. The generalizability
+of this approach should be further validated for challenging situations such as detecting green tomatoes from leaves. GANs were also used to generate synthetic
+data for model training.
+
+An alternative approach was to use patch-based training. TasselNet was developed to count corn tassels in two phases. In the first phase,
+a local CNN regression model was established to predict the number of tassels in each patch of an image. In the second step, the estimated count in each image patch
+was averaged over the individual pixels in that patch to create a count map with the same spatial dimension as the original image. The sum of all pixel intensities
+in the count map represents the final count of tassels in that image. Experimental results showed that TasselNet achieved counting accuracies from 74.8\% to 97.1\%,
+which were 2 to 5 times higher than those of conventional methods. TasselNet uses the patch-based training method, which substantially increases the number of
+training images. For classification-based methods, plant/organ counts were treated as a discrete counting problem and, therefore, a predefined score or grade was
+assigned to a given image rather than an exact count. An example of a classification-based method is WheatNet, which was developed to predict the percentage of
+flowering in wheat images. Multiple images were acquired for each plot. A total of 11 classes were annotated for each plot, corresponding to 11 visual scores with
+a percentage header from 0 to 100\% with a 10\% interval. The average prediction of all images in a plot was the final percent header for that plot, which reduced
+counting errors due to inaccurate classification.
+
+Object detection is an intuitive approach to counting plants and plant organs in still images: accurate object detection ensures accurate object counts.
+DeepFruits was the first study to explore the use of modern CNN architecture for fruit detection. Several key contributions were recognized in this study.
+First, transfer learning was used to train a Faster RCNN model with 100 labeled images, demonstrating the potential of using limited labeled images to train the CNN
+architecture. Second, when using RGB images, the trained Faster RCNN model provided a 1\% improvement in F1 score over that of the CRF model. Third, data fusion was
+conducted at the level of the raw data and at the decision level for the Faster RCNN models. A custom two-step framework was proposed using the superpixels generated
+by the simple iterative linear clustering algorithm as proposed regions. A CNN model was used to classify each superpixel as a flower or a non-flower object. While
+this approach showed higher performance than conventional ML methods, it has a potential limitation in region proposal. The advantage of the end-to-end CNN architecture
+is that they are able to use richer features for accurate localization, especially when the images vary greatly. However, superpixels are subject to image variation and
+may not provide optimal region proposals. The generalizability of this approach, therefore, is most likely lower than that of end-to-end methods.
+
+Many studies have also investigated semantic segmentation-based approaches for plant/plant organ counting. CNN architectures for semantic segmentation were first used to
+obtain plant/plant-organ masks. Then, the obtained masks were post-processed using conventional computer vision methods to isolate individual plants/plant organs so that
+the objects could be counted. An obvious concern is that although CNNs could provide accurate semantic masks, counting accuracy may still suffer from inaccurate
+post-processing. To address this concern, studies have explored the use of instance segmentation CNNs that can directly segment individual objects in images. These
+studies faced the same challenge in the lack of training data. To overcome this limitation, most of these studies developed algorithms to generate synthetic images for
+model training. Two types of image synthesizing methods have been proposed: rule-based and GAN. Rule-based methods use a predefined leaf model to generate a plant based
+on predefined growth rules. GAN-based approaches,however, could generate synthetic images without sacrificing leaf structure. Thus, a method combining rule-based and
+GAN-based methods was developed for image synthesizing.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

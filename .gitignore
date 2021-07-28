@@ -274,3 +274,10 @@ TSWLatexianTemp*
 
 # Makeindex log files
 *.lpz
+
+
+# Personalized ignore
+
+dataset/
+instance_divider_v1.00/
+.vscode/
