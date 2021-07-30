@@ -286,3 +286,6 @@ instance_divider_v1.00/
 __pycache__/
 saved_images/
 saved_images*
+trash/
+
+
