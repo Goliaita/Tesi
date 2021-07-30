@@ -282,7 +282,24 @@ later growth stages, where the soybean canopy grows faster and its contour becom
 found that ROD-ResNet-Softmax outperforms almost all other approaches in terms of both validation mA and test mA. ROD-Softmax significantly outperforms Fourier-Softmax
 and achieves classification accuracy comparable to HOG-Softmax.
 
-\section{Weed Growth Stage with CNN}
+\section{Deep Leaf Counting}
+In this paper, the authors modified the ResNet50 residual neural network to learn a leaf counter by taking an RGB top-view image of a rosette plant as input.
+They used this network for its ability to generalize, which was crucial for this challenge due to its "in the wild" setting, as well as its speed of training
+and convergence. The ResNet architecture is easier to optimize than other deep networks and addresses the degradation problem present in very deep networks,
+which states that as deep networks converge, the accuracy becomes saturated. The network is modified by removing the last layer intended for classification,
+flattening the network, and adding two fully connected layers FC1 and FC2 of 1024 and 512 nodes respectively followed by ReLU activations. We apply an L2 activation
+regularization on layer FC2 to penalize the layer activity during training and prevent overfitting. For preprocessing, each image was resized to be 320x320x3 pixels
+and a histogram stretch was applied on all images to improve contrast as some images were darker than others. To evaluate our architecture, we first trained the network
+on each of the CVPPP datasets individually. We then added more data by combining the datasets together and finally a combination of all four datasets.
+Cross-validation was performed four times on training images sampled differently during training. Data augmentation was performed during training of all models.
+We used a generator that assigns training images a random affine transformation from a pool of random rotations from 0-170 degrees, zooming between 0-10\% of the
+total image size, and vertical or horizontal flipping. The authors found that tuning the Resnet50 network, pretrained on the ImageNet dataset, yielded better and
+more consistent results than providing stronger annotations and using random initialization. First, the network can work with images of different sizes and scales
+present in each dataset. Second, our model was able to learn to count leaves of different shapes, sizes, and orientations provided with only minimal annotations. 
+Data labeling is increasingly time and resource consuming when moving from weak to strong annotations, which is one reason for the relative lack of publicly available
+plant phenotype datasets. Finally, the datasets provided contained a limited amount of images compared to the amounts of data traditionally used for deep learning models.
+The results show that combining datasets from different sources and even different species is beneficial, as it improves test accuracy for all datasets and more generally
+for all evaluation metrics. The worst performance is seen in networks that are trained on only a single dataset. Combining any two datasets produces similar results.
 
 
 
