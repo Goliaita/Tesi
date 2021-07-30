@@ -11,6 +11,7 @@
 *.cb
 *.cb2
 .*.lb
+*.tar
 
 ## Intermediate documents:
 *.dvi
@@ -282,3 +283,6 @@ dataset/
 instance_divider_v1.00/
 .vscode/
 *-checkpoint.ipynb
+__pycache__/
+saved_images/
+saved_images*
