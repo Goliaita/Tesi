@@ -155,38 +155,7 @@ model training. Two types of image synthesizing methods have been proposed: rule
 on predefined growth rules. GAN-based approaches,however, could generate synthetic images without sacrificing leaf structure. Thus, a method combining rule-based and
 GAN-based methods was developed for image synthesizing.
 
-\section{3D Phenotyping for Komatsuna dataset}
-In this paper, they built a platform to capture overhead views of a plant and measure the environmental conditions around it. They first
-selected a plant species, Komatsuna, which is a Japanese mustard spinach and a leafy vegetable. It can be grown indoors, and is known to
-be resistant to pests and grows very fast. Hydroponic culture is an alternative method.It is clean, irrigation and fertilization are automated
-so that plant growth is accelerated, fewer agricultural chemicals are needed than soil culture, and replanting failures do not normally occur.
-Another advantage is that plant root systems can also be measured because roots growing in water can be captured through cameras. For lighting,
-they used LED lights, with lighting durations and colors programmable using the software provided. To measure ambient temperature, humidity, and
-light intensity, they used a Sony MESH, where light intensity is measured, which can be measured in lux. However, lux may not be appropriate in
-a precise sense because it is based on the property of human eyes. To measure the pure energy of lights, photosynthetic photon flux density
-(PPFD) is more appropriate in biology. In their platform, lux is used as a simplified index in environmental information. An RGB-D camera
-consists of an RGB camera and a structured light or time-of-flight depth camera based on infrared lights. Since the leaf size of plants in the
-early stages of growth is small, depth images usually need to be captured at a closer distance from the plant to magnify the size in the
-captured images. However, some RGB-D cameras are not designed for such short depth ranges. In their platform, they used Intel RealSense SR300
-which is specifically optimized for short-range acquisition.
-They created two types of datasets using an RGB-D camera and a multiple RGB camera at approximately 2400 lux, 28 °C, and 30\% humidity.
 
-\subsection{RGB-D Dataset}
-Since one RGB-D camera was attached to capture the entire part of the toolkit, each plant region was manually segmented as a plant image
-and labeled as a label image. In order to use the dataset for temporal leaf tracking, the same leaf label was assigned to the same leaf in
-images captured at different times. The original camera resolution was 640 × 480 and the resolution of the plant images was, for example,
-166 × 190 pixels. Because the viewpoints of the RGB and depth images were aligned by the camera library, the labels were valid for both images.
-Due to the mismatch between RGB and depth camera, the resulting images were not aligned, so the depth image was aligned into an RGB image in our
-platform. For this reason, the authors provided the original depth image and a transformation matrix from the depth image viewpoint to the RGB image
-viewpoint so that the point cloud could also be transformed as needed without any interpolation.
-
-\subsection{Multi-View Dataset}
-For the multiview dataset, they captured five plants from three different viewpoints and manually segmented them into an individual plant
-like images. To use the dataset for spatiotemporal tracking of leaves, the same leaf label was assigned to the same leaf in images
-captured with different cameras at different times. The ground truth of the 3D shape was not measured because it was not easy to
-capture more accurate 3D shapes than when using multiple high-resolution images. This dataset will be useful for evaluating the
-segmentation of spatiotemporal instances for multiple views. In the relevant literature, instance segmentation has typically been
-performed using a single view image, and may be more difficult than using multiple views.
 
 
 \section{Leaf Instance Segmentation}
@@ -353,7 +322,50 @@ models were collected in fields with different soil types and light conditions. 
 other, which this network was typically able to overcome.
 
 \section{Drought Stress Classification}
-ciao mondo qui stiamo scrivendo una riga
+The authors modify the standard SfM pipeline as proposed in to use learned keypoints and descriptors based on deep networks. They employed Learned Invariant Feature
+Transform (LIFT) for keypoint detector and descriptor learning instead of Scale-Invariant Feature Transform. The key points in LIFT correspond to distinctive regions,
+where the conditions that define distinctiveness are learned with a Siamese deep network on the dataset for the target domain. Thus, the authors selected LIFT for its
+ability to learn key points and the corresponding descriptor based on the specific characteristics of the dataset. Learning descriptors and patch detectors based on deep
+networks requires training the detector-describer with specific examples. This allows the network to adapt to the complexities of plant structure, especially curvature
+and color variation. Therefore they perform LIFT detector-orientation estimator-descriptor pipeline training with a leaf matching dataset. For segmentation, they used
+and Voxel Cloud Connectivity Segmentation to segment the plant canopy from the reconstructed point cloud. It works directly on 3D point clouds. While leaf segmentation
+in 2D images is an active area of research, due to the availability of depth information the problem in 3D can be looked at from a pure computer vision perspective. The
+method consists of converting the input point cloud into a voxelized point cloud and construct an adjacency graph. To construct the adjacency graph, a grid of voxels is
+formed and seeded voxels are selected and initialized. Isolated voxels are filtered considering a small search volume around the seeded voxels. The voxels are then
+clustered, conditioned by the smallest gradient within the search volume. The clusters are further aggregated into supervoxels by comparing a feature vector 39 a
+dimensional feature vector derived using XYZ, RGB etc. The authors considered two types of descriptors Local Descriptors and Deep Descriptors. For the former,
+they evaluated and Signature of Histograms of Oriented Gradients, Rotational Projection Statistics, and Fast Point Feature Histograms. The applicability and comparison
+of these descriptors in characterizing various plant-related tasks, and in particular the identification of drought stress, have not been studied before.
+The main advantage of local descriptors lies in their ability to encode geometric properties of the model. This feature makes them suitable for quantifying various
+phenotypic traits involving structural changes. For the second, there are two types of deep architectures to process 3 data:
+
+\begin{itemize}
+\item 3D Convolutional Neural Networks (3D-CNN);
+\item PointNet.
+\end{itemize}
+
+Due to the inherent nature of the convolution operation, 3D-CNNs work on structured data, i.e., voxelised clouds. However, PointNet is a recent architecture that works
+directly on unstructured 3D PoCloud data. The voxelization of the point cloud introduces an approximation to the model as it is essentially a quantization process. PointNet
+generates a global feature on the point cloud point cloud. This is done by learning a permutation invariant representation of points from the input point cloud that is
+encoded into a vector using a symmetric function.  However, by design, the global feature produced by PointNet does not capture local geometric information. We observed
+that this is the reason for the relatively poor performance of PointNet global features trained on traditional objects. To overcome this limitation, we aggregate the
+local and global information in a manner similar to PointNet's segmentation network, i.e., the global descriptor is fed back into the network along with the keypoint
+descriptor to generate a more robust keypoint descriptor. Next, we quantize the resulting local descriptors for the detected keypoints on the point cloud and concatenate
+them with the global descriptor. The pipeline starts by extracting 3D features from the segmented 3D point cloud. This is followed by a training and testing phase.
+It should be noted that the number of key points is different for each point cloud. Therefore, during the training phase, they learned a quantized representation of
+the 3D features. Quantization is necessary to obtain a single uniform length descriptor for each point cloud.  In this work, we directly quantize the features using
+Fisher Vector. As will be evident in the experimental section, Fisher Vectors are capable of discriminatively encoding features in point clouds. Since the size of the
+codebook from Fisher Vector is small, we use a linear classifier, Support Vector Machine for further classification. This approach allows us to reduce the overall
+computational complexity while maintaining robustness. For PointNet, we report results on both the pre-trained model and after tuning PointNet with 3D Point Cloud
+models from the training dataset. The fine-tuning is performed by initializing the weights from the pre-trained PointNet for object classification and then continuing
+the training process with the 3D point cloud of the wheat plants. The reconstruction of such fine details can be attributed to the quality of matches on the leaf surfaces
+from the key points and descriptors learned for 3D reconstruction. . Accuracy is calculated as the percentage of the number of correct classifications over the total
+number of test inputs for the respective drought and health classes. However, it is interesting to note that PointNet pre-trained on rigid objects performs poorly against
+all compared descriptors. This could be due to two reasons: the default architecture of PointNet is not easily generalized, and plants have a smooth, textureless surface
+and are usually heavily occluded, which is not usually found in rigid bodies. In addition, RoPS outperforms all other local descriptors followed by SHOT (FV). It can
+be seen that descriptors quantified with Fisher Vector consistently perform better than the corresponding coding with Bag of Visual Words with an average gap of 1.6\%.
+This shows that as with 2D descriptors, Fisher Vector is able to encode a more discriminative representation of local descriptors than compared to compared to BoVW.
+Therefore, in aggregating features in fine-tuned PointNet, Fisher Vector was used as a feature quantization technique.
 
 
 
@@ -369,7 +381,40 @@ ciao mondo qui stiamo scrivendo una riga
 
 
 
+\section{Available Dataset}
 
+\subsection{3D Phenotyping for Komatsuna dataset}
+In this paper, they built a platform to capture overhead views of a plant and measure the environmental conditions around it. They first
+selected a plant species, Komatsuna, which is a Japanese mustard spinach and a leafy vegetable. It can be grown indoors, and is known to
+be resistant to pests and grows very fast. Hydroponic culture is an alternative method.It is clean, irrigation and fertilization are automated
+so that plant growth is accelerated, fewer agricultural chemicals are needed than soil culture, and replanting failures do not normally occur.
+Another advantage is that plant root systems can also be measured because roots growing in water can be captured through cameras. For lighting,
+they used LED lights, with lighting durations and colors programmable using the software provided. To measure ambient temperature, humidity, and
+light intensity, they used a Sony MESH, where light intensity is measured, which can be measured in lux. However, lux may not be appropriate in
+a precise sense because it is based on the property of human eyes. To measure the pure energy of lights, photosynthetic photon flux density
+(PPFD) is more appropriate in biology. In their platform, lux is used as a simplified index in environmental information. An RGB-D camera
+consists of an RGB camera and a structured light or time-of-flight depth camera based on infrared lights. Since the leaf size of plants in the
+early stages of growth is small, depth images usually need to be captured at a closer distance from the plant to magnify the size in the
+captured images. However, some RGB-D cameras are not designed for such short depth ranges. In their platform, they used Intel RealSense SR300
+which is specifically optimized for short-range acquisition.
+They created two types of datasets using an RGB-D camera and a multiple RGB camera at approximately 2400 lux, 28 °C, and 30\% humidity.
+
+\subsubsection{RGB-D Dataset}
+Since one RGB-D camera was attached to capture the entire part of the toolkit, each plant region was manually segmented as a plant image
+and labeled as a label image. In order to use the dataset for temporal leaf tracking, the same leaf label was assigned to the same leaf in
+images captured at different times. The original camera resolution was 640 × 480 and the resolution of the plant images was, for example,
+166 × 190 pixels. Because the viewpoints of the RGB and depth images were aligned by the camera library, the labels were valid for both images.
+Due to the mismatch between RGB and depth camera, the resulting images were not aligned, so the depth image was aligned into an RGB image in our
+platform. For this reason, the authors provided the original depth image and a transformation matrix from the depth image viewpoint to the RGB image
+viewpoint so that the point cloud could also be transformed as needed without any interpolation.
+
+\subsubsection{Multi-View Dataset}
+For the multiview dataset, they captured five plants from three different viewpoints and manually segmented them into an individual plant
+like images. To use the dataset for spatiotemporal tracking of leaves, the same leaf label was assigned to the same leaf in images
+captured with different cameras at different times. The ground truth of the 3D shape was not measured because it was not easy to
+capture more accurate 3D shapes than when using multiple high-resolution images. This dataset will be useful for evaluating the
+segmentation of spatiotemporal instances for multiple views. In the relevant literature, instance segmentation has typically been
+performed using a single view image, and may be more difficult than using multiple views.
 
 
 
