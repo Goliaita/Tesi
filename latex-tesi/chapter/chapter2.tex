@@ -333,9 +333,27 @@ their predictions can be accurate for easier samples with no leaf overlap or mod
 leaves. In this sense, our generalized framework is able to model and infer leaf shapes under deformation and partial occlusion better than their main competitor given a
 few hundred images for a particular species.
 
+\section {Weed Growth Estimator with CNN}
+In this research, a CNN was used to count the number of leaves on 18 different weed species or families. However, deep CNNs need to be trained on a large number of images
+to learn how to automatically extract general features from the input data. Overfitting makes it difficult for the network to generalize to new examples that were not in
+the training set. In addition, the training dataset was augmented by using horizontal tilt, rotation, zoom, width shift, height shift, and Gaussian smoothing filters. The
+authors selected the Inception-v3 architecture, which is a refinement of the GoogLeNet architecture. The Inception-v3 architecture was chosen because of its good
+performance, ease of implementation, and relatively low computational cost, which yielded excellent results. This network with their dataset was trained for 20 epochs
+and the predictions from the 20 models were combined to increase the confidence in the predictions. Because the 20 models were not identical, they could predict different
+growth stages for the same plants. Predictions of the growth stage of the same plant by different models were more different when more plants were present in an image,
+resulting in a higher standard deviation for those images. In order to improve overall accuracy, the softmax outputs from all 20 models were aggregated, and the maximum
+value index was used as a sample class prediction. The accuracy results were 83\%. CountDiff is the average forecast bias, which is 0.07 leaves. This indicates that the
+model has a small tendency to overestimate the number of leaves. The Abs. CountDiff shows that on average, the model is off by 0.51 leaves, and for 70\% of the samples,
+it is off by zeroThus, according to the obtained results, it can be concluded that the developed model can be implemented with 70\% accuracy on variable field machines,
+including weed control machine; because in these systems, the amount of toxic material applied to the weed in neighboring field classes does not differ much. Confidence
+in the estimated accuracy was calculated using Wilson confidence intervals over 10,000 iterations. The best network performance was obtained for some weed species, probably
+due to their large number of training samples and shared physical properties, for the others the average accuracy was less than 60\% due to fewer training images. Therefore,
+this study presents a convolutional neural network-based method to estimate the growth stage in terms of leaf number of various weed species. Images from various camera
+models were collected in fields with different soil types and light conditions. Because the images were collected under field conditions, plants often overlapped each
+other, which this network was typically able to overcome.
 
-
-
+\section{Drought Stress Classification}
+ciao mondo qui stiamo scrivendo una riga
 
 
 
