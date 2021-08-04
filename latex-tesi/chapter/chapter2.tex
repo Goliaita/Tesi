@@ -112,7 +112,7 @@ for the use of many DL algorithms, so the researchers investigated the use of ge
 plant stress detection and classification. A very recent study explored the use of a custom CNN architecture to detect plant diseases in hyperspectral images.
 The novelty of the custom architecture is the use of a 3D convolution operation that can directly convolve spatial and spectral information into hypercubes.
 This would not only inspire future studies related to plant stresses, but also allow the reanalysis of many previous hyperspectral images collected for plant
-stress analysis. With improved detection accuracy, subtle differences in stress between cultivars/treatments can be revealed to improve our understanding of plant
+stress analysis. With improved detection accuracy, subtle differences in stress between cultivars/treatments can be revealed to improve their understanding of plant
 responses to stresses.
 
 \subsection{Plant Counting}
@@ -206,7 +206,7 @@ non-overlapping leaves of the ground truth. It should be noted that the number o
 representative shapes, especially at later growth stages. Based on the database of plant phenotyping images, for early and middle growth stage images,
 multi-leaf pattern matching was not frequently used because the generated leaf candidates comprised 90\% of the input segmented mask. This was due to the
 non-overlapping scenarios observed in these images. However, it also led to the neglect of leaves that were highly. The comparative study demonstrates the
-efficiency of our proposed structure in relation to different plant species. The strategy to extract non-occluded leaves involves the automatic generation
+efficiency of their proposed structure in relation to different plant species. The strategy to extract non-occluded leaves involves the automatic generation
 of shape priors, which can be further used to segment individual leaves into overlapping regions in the image.
 
 \section{Multi-Task Plant Phenotyping}
@@ -230,7 +230,7 @@ of the tips indicates that the network tends to underestimate, rather than overe
 \section{Fine-Grained Recognition in HTP}
 In this paper, the authors pre-process the images with object localization directly based on prior knowledge such as sensor fusion and experiment setup,
 object segmentation using green-based brightness thresholds or Otsu threshold, and finally contour extraction as an array of contour pixel coordinates.
-Then we unfold the 2-dimensional contour into a 1-dimensional radial object descriptor, which indicates the shortest distance from each pixel to the seed.
+Then the authors unfold the 2-dimensional contour into a 1-dimensional radial object descriptor, which indicates the shortest distance from each pixel to the seed.
 Then the authors post-process these results, where they normalize the values in ROD in a range of [0,1] and scale them from different lengths into a fixed
 by sampling or interpolation. To complete the ROD feature they merge them with another low-level local feature descriptor, the histogram of oriented gradients,
 which have local gradients at different orientations, which is powerful for differentiating objects with meaningful texture patterns. The histograms of neighboring
@@ -238,8 +238,8 @@ cells are further grouped into block groups with an overlap ratio to enhance loc
 type of CNN with residual parts to skip layers so that higher accuracy can be efficiently achieved by using deeper layers. It is the representative of deep feature
 extraction methods because its performance has been demonstrated in plant research. To classify and calculate the loss function, the authors used Softmax regression,
 and learned the set of weight parameters by minimizing the loss function. The first experiment involves soybean plots grown in the field using UAS imagery, where we
-highlight the robustness of our approach under changing camera angle of view. The second experiment involves rosette plants in the greenhouse using a fixed camera,
-where we highlight the robustness of our approach under sus change in growth phase. They evaluated the robustness of ROD and its fusion with HOG and ResNet in
+highlight the robustness of their approach under changing camera angle of view. The second experiment involves rosette plants in the greenhouse using a fixed camera,
+where they highlighted the robustness of their approach under sus change in growth phase. They evaluated the robustness of ROD and its fusion with HOG and ResNet in
 Softmax using seven different approaches. The first two approaches, CNN and ResNet-18, are based on CNN, Each convolution layer is followed by a batch normalization
 layer, a ReLu layer, and a max pooling layer. For both CNN and ResNet-18, they manually tuned the mini-batch size and learning rate based on each validation dataset
 before finalizing its classification result. By combining all these layers, they obtained five models, which will be trained using the Scaled Conjugate Gradient method.
@@ -256,15 +256,15 @@ In this paper, the authors modified the ResNet50 residual neural network to lear
 They used this network for its ability to generalize, which was crucial for this challenge due to its "in the wild" setting, as well as its speed of training
 and convergence. The ResNet architecture is easier to optimize than other deep networks and addresses the degradation problem present in very deep networks,
 which states that as deep networks converge, the accuracy becomes saturated. The network is modified by removing the last layer intended for classification,
-flattening the network, and adding two fully connected layers FC1 and FC2 of 1024 and 512 nodes respectively followed by ReLU activations. We apply an L2 activation
+flattening the network, and adding two fully connected layers FC1 and FC2 of 1024 and 512 nodes respectively followed by ReLU activations. they apply an L2 activation
 regularization on layer FC2 to penalize the layer activity during training and prevent overfitting. For preprocessing, each image was resized to be 320x320x3 pixels
-and a histogram stretch was applied on all images to improve contrast as some images were darker than others. To evaluate our architecture, we first trained the network
-on each of the CVPPP datasets individually. We then added more data by combining the datasets together and finally a combination of all four datasets.
+and a histogram stretch was applied on all images to improve contrast as some images were darker than others. To evaluate their architecture, they first trained the network
+on each of the CVPPP datasets individually. They then added more data by combining the datasets together and finally a combination of all four datasets.
 Cross-validation was performed four times on training images sampled differently during training. Data augmentation was performed during training of all models.
-We used a generator that assigns training images a random affine transformation from a pool of random rotations from 0-170 degrees, zooming between 0-10\% of the
+They used a generator that assigns training images a random affine transformation from a pool of random rotations from 0-170 degrees, zooming between 0-10\% of the
 total image size, and vertical or horizontal flipping. The authors found that tuning the Resnet50 network, pretrained on the ImageNet dataset, yielded better and
 more consistent results than providing stronger annotations and using random initialization. First, the network can work with images of different sizes and scales
-present in each dataset. Second, our model was able to learn to count leaves of different shapes, sizes, and orientations provided with only minimal annotations. 
+present in each dataset. Second, their model was able to learn to count leaves of different shapes, sizes, and orientations provided with only minimal annotations. 
 Data labeling is increasingly time and resource consuming when moving from weak to strong annotations, which is one reason for the relative lack of publicly available
 plant phenotype datasets. Finally, the datasets provided contained a limited amount of images compared to the amounts of data traditionally used for deep learning models.
 The results show that combining datasets from different sources and even different species is beneficial, as it improves test accuracy for all datasets and more generally
@@ -274,32 +274,32 @@ for all evaluation metrics. The worst performance is seen in networks that are t
 For this paper, the authors studied an architecture used for segmentation and counting are trained separately, but not independently, since the binary mask generated by
 the segmentation model is used to train the counting model along with the RGB channels. The idea of deconvolutionary networks is to construct a compact and informative
 set of feature maps or vectors from a set of input images. Usually, the design of a deconvolutionary network contains fully connected layers in between to generate the
-feature vector from the clustered feature maps. However, we propose that the features in the semi-global context should be sufficient to segment the leaf regions from 
-the background in the color images, and thus the FC layers could be omitted for our application. One advantage of eliminating FC layers is that it greatly reduces the
-number of trainable parameters without sacrificing performance. For these reasons, we adopt the SegNet architecture. Instead, the convolutional front-end substructure
+feature vector from the clustered feature maps. However, they propose that the features in the semi-global context should be sufficient to segment the leaf regions from 
+the background in the color images, and thus the FC layers could be omitted for their application. One advantage of eliminating FC layers is that it greatly reduces the
+number of trainable parameters without sacrificing performance. For these reasons, they adopt the SegNet architecture. Instead, the convolutional front-end substructure
 of the network is the VGG architecture with batch normalization followed by each convolutional layer. In the convolutional front-end of SegNet, there are five 2×2 pooling
 operations with zero overlap following multiple convolutional layers and rectification each time. Then, the convolutional feature maps are compressed 32 times before
 starting decompression through the deconvolutional back-end. The logic behind providing the counting module with the segmentation mask and the original RGB image instead
 of providing the segmented region in the RGB image or the binary mask alone. Although the segmentation results generated by SegNet are sufficiently accurate for the
-counting step for many images in the dataset, our network generates spurious segmentations for some of them. The design of our regression leaf counting network takes
+counting step for many images in the dataset, their network generates spurious segmentations for some of them. The design of their regression leaf counting network takes
 inspiration from the VGG architecture, which reinforces the idea of deeper architectures with a long list of convolutional and rectification layers stacked one after
 the other with several pooling layers in between and then the classification layer follows a pair of fully connected layers. The authors trained their model from
 scratch without using any pre-trained weights for initialization. Also in SegNet, the authors used different learning rates for different modules, while a fixed
-learning rate was used for all layers in their training. They augmented the data and trained the network in 3 steps. First, for each image, we extracted the union
+learning rate was used for all layers in their training. They augmented the data and trained the network in 3 steps. First, for each image, they extracted the union
 of the first 20 object proposals, flipped from top to bottom and left to right, rotated with an angular step of 4 degrees, cropped the largest square from the central
 position to avoid dark regions due to rotation, and created a pair of blurred versions with Gaussian and the corresponding sharp images. Second, they took the proposed
 images and their flipped versions and generated nearly 0.3M subsamples of size 224×224 deterministically with a fixed step and train the network for 8 more epochs.
-Finally, we generated another 0.19M samples in a similar manner to the second step, but this time from the original images instead of the proposals. Spatial
+Finally, they generated another 0.19M samples in a similar manner to the second step, but this time from the original images instead of the proposals. Spatial
 cross-entropy was used as an error criterion. The ratio of foreground to background weights in the cross-entropy calculation for the first step was 2.0 and 1.2
-for the later steps. In the test phase, we took dense 224 × 224 samples deterministically with fixed step from each of the test images and classified each pixel
-according to the aggregate probability on the samples. During the design of the network architecture, we experimented with adaptive operations to handle images
-of varying sizes, but they did not seem to work any better than resizing the images to a fixed size. In addition, we had to be cautious in choosing the size for
+for the later steps. In the test phase, they took dense 224 × 224 samples deterministically with fixed step from each of the test images and classified each pixel
+according to the aggregate probability on the samples. During the design of the network architecture, they experimented with adaptive operations to handle images
+of varying sizes, but they did not seem to work any better than resizing the images to a fixed size. In addition, they had to be cautious in choosing the size for
 the resize operation so that for larger images with resolution such as 2000 × 2500, the properties of the small leaf regions would not deteriorate much. Considering
-this fact, we chose the size of the modified image to be 448×448 while preserving the aspect ratio. After performing the resizing operation, each of the images was
+this fact, they chose the size of the modified image to be 448×448 while preserving the aspect ratio. After performing the resizing operation, each of the images was
 augmented 8 times using intensity saturation, Gaussian blur and sharpening, and additive Gaussian noise. Each image was also flipped from top to bottom and left to
 right and rotated. After data generation, the counting or regression network was trained for 40 epochs using Adam with a fixed learning rate. The authors found that
 their predictions can be accurate for easier samples with no leaf overlap or moderate leaf size or both, but deteriorate for more difficult cases with smaller or overlapping
-leaves. In this sense, our generalized framework is able to model and infer leaf shapes under deformation and partial occlusion better than their main competitor given a
+leaves. In this sense, their generalized framework is able to model and infer leaf shapes under deformation and partial occlusion better than their main competitor given a
 few hundred images for a particular species.
 
 \section {Weed Growth Estimator with CNN}
@@ -347,16 +347,16 @@ phenotypic traits involving structural changes. For the second, there are two ty
 Due to the inherent nature of the convolution operation, 3D-CNNs work on structured data, i.e., voxelised clouds. However, PointNet is a recent architecture that works
 directly on unstructured 3D PoCloud data. The voxelization of the point cloud introduces an approximation to the model as it is essentially a quantization process. PointNet
 generates a global feature on the point cloud point cloud. This is done by learning a permutation invariant representation of points from the input point cloud that is
-encoded into a vector using a symmetric function.  However, by design, the global feature produced by PointNet does not capture local geometric information. We observed
-that this is the reason for the relatively poor performance of PointNet global features trained on traditional objects. To overcome this limitation, we aggregate the
+encoded into a vector using a symmetric function.  However, by design, the global feature produced by PointNet does not capture local geometric information. They observed
+that this is the reason for the relatively poor performance of PointNet global features trained on traditional objects. To overcome this limitation, the authors aggregates the
 local and global information in a manner similar to PointNet's segmentation network, i.e., the global descriptor is fed back into the network along with the keypoint
-descriptor to generate a more robust keypoint descriptor. Next, we quantize the resulting local descriptors for the detected keypoints on the point cloud and concatenate
+descriptor to generate a more robust keypoint descriptor. Next, they quantize the resulting local descriptors for the detected keypoints on the point cloud and concatenate
 them with the global descriptor. The pipeline starts by extracting 3D features from the segmented 3D point cloud. This is followed by a training and testing phase.
 It should be noted that the number of key points is different for each point cloud. Therefore, during the training phase, they learned a quantized representation of
-the 3D features. Quantization is necessary to obtain a single uniform length descriptor for each point cloud.  In this work, we directly quantize the features using
+the 3D features. Quantization is necessary to obtain a single uniform length descriptor for each point cloud.  In this work, they directly quantize the features using
 Fisher Vector. As will be evident in the experimental section, Fisher Vectors are capable of discriminatively encoding features in point clouds. Since the size of the
-codebook from Fisher Vector is small, we use a linear classifier, Support Vector Machine for further classification. This approach allows us to reduce the overall
-computational complexity while maintaining robustness. For PointNet, we report results on both the pre-trained model and after tuning PointNet with 3D Point Cloud
+codebook from Fisher Vector is small, they use a linear classifier, Support Vector Machine for further classification. This approach allows us to reduce the overall
+computational complexity while maintaining robustness. For PointNet, they report results on both the pre-trained model and after tuning PointNet with 3D Point Cloud
 models from the training dataset. The fine-tuning is performed by initializing the weights from the pre-trained PointNet for object classification and then continuing
 the training process with the 3D point cloud of the wheat plants. The reconstruction of such fine details can be attributed to the quality of matches on the leaf surfaces
 from the key points and descriptors learned for 3D reconstruction. . Accuracy is calculated as the percentage of the number of correct classifications over the total
@@ -376,7 +376,7 @@ in the encoding network performs 3 × 3 convolution with a filter bank to produc
 followed by a rectified linear unit. There is a decoding layer corresponding to each encoding layer. At each decoding layer, the number of feature channels is reduced
 by half. The decoder samples its input feature map by a factor of 2. These feature maps are applied by repeated $3 \times 3$ convolution with multiple filter banks to produce
 dense feature maps. After each convolution layer, a batch normalization is used along with the ReLU activation function. The output with the multidimensional feature
-map is finally applied to the sigmoid function since we want to separate the plant pixels from the background, which is a two-class classification problem. The U-Net
+map is finally applied to the sigmoid function since they want to separate the plant pixels from the background, which is a two-class classification problem. The U-Net
 architecture includes an encoding network and a decoding network. The encoding network resembles the convolutional neural network. The encoding network includes
 repeated implementations of two $3 \times 3$ convolutions, rectified linear unit activation function, and a $2 \times 2$ max pooling with step
 2 for down sampling. Each down sampling step doubles the number of feature channels. Max pooling helps capture a large context of input images with a
@@ -397,33 +397,16 @@ both datasets. Dice coefficient is one of the important metrics for image segmen
 output segmented image. All three networks have better segmentation performance for the LSC dataset than the Fig dataset also in terms of other metrics such as precision,
 recall, F1-score. The output masks predicted by U-Net and UNet residuals closely match the truth images, while the masks predicted by SegNet have subtle changes that
 can be observed through visual inspection. These results show that the UNet and U-Net residuals are able to draw accurate boundaries for plant leaves and perform better 
-than SegNet in overlapping leaf segmentation. From these results, we can conclude that, the residues of U-Net and U-Net have comparable segmentation results 
+than SegNet in overlapping leaf segmentation. From these results, the authors can conclude that, the residues of U-Net and U-Net have comparable segmentation results 
 segmentation results while both networks (U-Net residual and U-Net) perform significantly better than SegNet in predicting leaf shape and boundary areas of fig plants.
 U-Net and U-Net residual have better segmentation results than the state-of-the-art model for fig plant segmentation, while SegNet achieves comparable performance.
 Although there is a less significant difference in segmentation accuracy values, other metrics such as specificity, precision, recall, NPV, and F1 score are significantly
 higher for SegNet, U-Net, and residual U-Net than the state-of-the-art. Since U-Net residual and U-Net have better performance, both these networks are also tested on
 10 high-resolution images of the whole fig field provided in the fig dataset. From the above results and discussion, it is clear that U-Net residual achieves better
 performance than other methods for the LSC dataset and comparable results with U-Net for the fig dataset. U-Net residual achieves this segmentation performance with
-about half of the trainable parameters compared to SegNet or U-Net. As we can see in Table 6, U-Net residual has the lowest, about 15.3 million trainable parameters
+about half of the trainable parameters compared to SegNet or U-Net. As they can see in Table 6, U-Net residual has the lowest, about 15.3 million trainable parameters
 followed by U-Net with 31.03 million and SegNet with 33.3 million parameters. This indicates that residual U-Net, although computationally very efficient, achieves
 better results than SegNet and comparable results to U-Net. 
-
-
-\section{Leaf Counting Without Annotation}
-
-
-
-
-
-
-
-
-\section{Fusing Network Component for Improved Accuracy}
-
-
-
-
-
 
 
 \section{Available Dataset}
@@ -463,9 +446,9 @@ performed using a single view image, and may be more difficult than using multip
 
 \subsection{Multi-Modality Plant Imagery Database}
 This dataset consist of 2 main species the first one is Arabidopsis thalian plants were grown at 20°C, in a 16 h/8 h
-day-night cycle with daylight intensity set at $100 \frac{\mu mol photons}{m s}$. The second is black bean plants of the cultivar Jaguar, were
+day-night cycle with daylight intensity set at $100 \frac{\mu \times mol \times photons}{m \times s}$. The second is black bean plants of the cultivar Jaguar, were
 grown in a day-night cycle of 14 h/10 h with day and night temperatures of 24 and 18°C, respectively, and a daylight intensity set at
-$200 \frac{\mu mol photons}{m s}$. In all cases, seeds were planted in soil covered with a black foam mask to minimize the fluorescence background
+$200 \frac{\mu \times mol \times photons}{m \times s}$. In all cases, seeds were planted in soil covered with a black foam mask to minimize the fluorescence background
 of algal growth. Two-week-old plants (Arabidopsis and bean) were transferred to imaging chambers and allowed to acclimate for 24 hours to
 LED illumination before beginning data collection. Different types of images were collected; fluorescence images were captured once every
 hour during the daylight period in a growth chamber. A series of five images were captured using a Hitachi KP-F145GV CCD camera, during
@@ -484,21 +467,21 @@ and a Matlab function is provided that reads the parameters and can plot the cam
 and it is useful to both model and quantify it. Depth noise $\epsilon$ is modeled as the sum of an image-dependent term $\epsilon_I$ and a sensor-dependent term
 $\epsilon_S: \epsilon = \epsilon_I + \epsilon_S$. The term $\epsilon_I$ is a random variable for each pixel with a value that varies between successive images
 taken from a fixed pose of a static scene. On the other hand, $\epsilon_S$ is a random variable for each pixel that models its depth offset, and its value changes
-only when the scene changes. The variance of $\epsilon_I$ is estimated for each pixel of a fixed scene observed over multiple images. In our experiments, we observed
+only when the scene changes. The variance of $\epsilon_I$ is estimated for each pixel of a fixed scene observed over multiple images. In their experiments, they observed
 flat albedo and uniform albedo. MSU-PID includes two subsets, one for each plant type: Arabidopsis and bean. Since there is no light at night, the plants cannot
 be captured by the RGB fluorescence and color sensors, while the IR and depth cameras can still perform capture at night. To make sure that all four modes are present
-at the same time, we release the portion of images captured only during daylight hours, which is 15 images per day for Arabidopsis and 13 for bean for all four modes.
-The two subsets differ in image resolutions. For Arabidopsis images, we labeled four frames per day, while for bean images, we labeled seven frames per day due to the
+at the same time, they release the portion of images captured only during daylight hours, which is 15 images per day for Arabidopsis and 13 for bean for all four modes.
+The two subsets differ in image resolutions. For Arabidopsis images, they labeled four frames per day, while for bean images, then they labeled seven frames per day due to the
 fast and spontaneous leaf movements of the plant. Leaf labeling can be propagated from fluorescence images to each of the other modes for Arabidopsis sequences. To
-quantify the accuracy of label propagation, we manually labeled three images for each of the three Arabidopsis plants on the fluorescence and RGB modes. The label
+quantify the accuracy of label propagation, they manually labeled three images for each of the three Arabidopsis plants on the fluorescence and RGB modes. The label
 in each mode is propagated on other modes. label propagation to provide labels for all four modes for Arabidopsis sequences. There are two benefits:
 \begin{itemize}
 \item decreases the need for manual labels, 
 \item the labeling is consistent for all four modes.
 \end{itemize}
-In the case of bean images, pixel association between modalities is more difficult because the depth variations within the plant are large. We found that a
-homograph-based mapping worked poorly, and thus the manual annotations we provide apply only to infrared and fluorescence images using the same camera. 
-Leaf segmentation, leaf counting, leaf alignment, and leaf tracking. To facilitate future research, we separate the database into training sets and test sets.
+In the case of bean images, pixel association between modalities is more difficult because the depth variations within the plant are large. The authors found that a
+homograph-based mapping worked poorly, and thus the manual annotations they provide apply only to infrared and fluorescence images using the same camera. 
+Leaf segmentation, leaf counting, leaf alignment, and leaf tracking. To facilitate future research, they separate the database into training sets and test sets.
 Forty percent of the data is used for training and 60\% for testing. Specifically, six Arabidopsis plants and two bean plants are selected for training. The user
 can decide to use one or more modes of the plant images for training and testing, respectively. Using RGB and depth modes for training and RGB for testing can
 take advantage of additional information during learning without incurring additional sensor costs during testing, which can be implemented either by learning
@@ -508,7 +491,9 @@ as the average distance of a pair of estimated leaf tips with a pair of labeled 
 
 The authors defined a threshold $\tau$ to operate on the corresponding tip-based errors, from this $\tau$ three metrics are calculated:
 \begin{itemize}
-\item Unmatched leaf rate, the percentage of unmatched leaves relative to the total number of labeled leaves. This can be attributed to two sources. The first is missed detections and false alarms. The second is the matched leaves with tip-based errors greater than $\tau$. When $\tau$ is large enough, this value is equal to the leaf count error,
+\item Unmatched leaf rate, the percentage of unmatched leaves relative to the total number of labeled leaves. This can be attributed to two sources. The first is missed
+detections and false alarms. The second is the matched leaves with tip-based errors greater than $\tau$. When $\tau$ is large enough, this value is equal to the leaf
+count error,
 \item Landmark error, the average of the tip-based errors smaller than $\tau$ of all matched leaves frame-to-frame. It is used to measure the alignment error of the leaf tips,
 \item Tracking consistency, the percentage of matching leaves from video to video whose tip-based errors are smaller than $\tau$. This is used to measure leaf tracking.
 \end{itemize}
@@ -516,16 +501,66 @@ In order to evaluate the accuracy of leaf segmentation, an additional metric bas
 estimated segmentation results and ground truth labels was adopted: Symmetric best Dice, the average of the best symmetric Dice among all labeled leaves.
 The authors treated all images over nine days as a video from the first image on the first day to the last image on the last day. To generate the template set, they first
 selected 12 templates with different aspect ratios from the labeled images in the training set along with the corresponding tip positions. For each template, the
-images are scaled to ten different sizes to cover the full range of leaf sizes in the database. For plant segmentation, we use a simple threshold and edge detection
+images are scaled to ten different sizes to cover the full range of leaf sizes in the database. For plant segmentation, they use a simple threshold and edge detection
 process to generate an image mask and an edge map. The best threshold is learned from the training set, which is done by tuning the threshold in a certain range and
-we find the best one by evaluating the overlap of the segmented masks with the ground truth label masks. Firstly, they find the best position of each model in the edge
-map which has the minimum CM distance, secondly, the authors applied multi-leaf alignment, thirdly, they applied multi-leaf tracking. In the tracing process, we delete
+they find the best one by evaluating the overlap of the segmented masks with the ground truth label masks. Firstly, they find the best position of each model in the edge
+map which has the minimum CM distance, secondly, the authors applied multi-leaf alignment, thirdly, they applied multi-leaf tracking. In the tracing process, the authors delete
 a leaf when it becomes too small. A new leaf is generated when there is a relatively large portion of the mask that has not been covered by the current leaf candidates.
 
 
-
-
-
+\subsection{Fine Grained Annotated Dataset}
+In this dataset the authors collected images of Arabidopsis in 2 different time June 2012 and between September and October 2013. The imaging setup consisted of a growth rack
+and an affordable automatic detection system to capture and send images of the scene via a wireless connection to a receiving computer. Plants were illuminated artificially
+and in a controlled manner to emulate daylight on a fixed daily cycle; camera sensors were placed between the lights. Images were captured only during the day for a period
+of time, two cameras were used: a consumer grade 7 Mpixel camera, and abbreviated as Canon, and an even cheaper Raspberry Pi based system. The tobacco images were acquired
+as part of the European "Gardening with a cognitive system" project, the GARNICS project, which aims to 3D detect plant growth and build perceptual representations for
+learning links to the actions of a robotic gardener. The setup allowed plants to be viewed from different poses. Below the robot and environmental sensors, the implemented
+system included:
+\begin{itemize}
+\item a water and nutrient solution delivery system for treatment application;
+\item high-power white LED lighting;
+\item low-power white fluorescent lighting used for imaging.
+\end{itemize}
+Tobacco plants were grown in $7\times7$cm pots under constant light conditions with a day/night rhythm of 16h/8h. Images show growth stages from germination to leaf
+development, early observations at the growth stage. A significant number of object-based annotations, bounding boxes, can be computationally obtained based on
+pixel-level segmentation masks of plants and leaves, respectively, that were manually annotated by experts. The annotation consisted of three steps. First, we obtained
+a binary segmentation of plant objects in the scene in a computer-assisted manner. For Arabidopsis, we used the active contour-based approach described by Minervini et al.
+While for tobacco, a simple color-based approach was used for plant segmentation. The result of this segmentation was manually refined using raster graphic editing software
+to ensure that all visible part of the shoot is included in the plant mask and the background is excluded. Next, within the binary mask of each plant, we outlined the
+individual leaves completely manually. To reduce observer variability and increase accuracy, the labeling process always involved two annotators: one annotating the
+dataset and one checking the other. To reduce observer variability and increase accuracy, the labeling process always involved two annotators: one annotating the
+dataset and one checking the other. On secondary inspection of the data, annotators recorded additional categorical qualitative annotations such as: estimated difficulty
+of segmentation, plant appears in focus, leaves appear in vertical positions which is typical in tobacco, plant is occluded by another, and scene contains complexity.
+The authors divided the acquired images into different datasets according to the type of task:
+\begin{itemize}
+\item For plant segmentation, the dataset consists of 15 tray images from Ara2012, 27 from Ara2013, and 27 from Ara2013. For each image a corresponding black and white
+mask coded as an indexed image provides pixel-level information about the location of plant objects. For evaluation criteria they suggest Dice coefficient, precision,
+and recall, as they have been used throughout image analysis and are also common in plant imaging;
+\item For leaf segmentation, they used a leaf mask but without temporal label consistency. 120 from Ara2012, 165 from Ara2013, and 62 from Tobacco, images of individual
+plants that appear centered are used. Instead for the evaluation criteria they suggest SymmetricBestDice, the average symmetric Dice score across all objects;
+\item In leaf detection, the dataset consists of single plant images, 120 from Ara2012, 165 from Ara2013, and 62 from Tobacco, and for each image, a CSV file that
+stores per row the leaf index and coordinates of each bounding box, with as many rows as there are leaves, the number of accurate detections, and their accuracy
+assessed with overlap measures;
+\item For leaf counts they extract for each leaf the weighted transformed distance of the center of mass and also the center of mass. When these discord significantly, 
+and if any of the centers are outside the binary shape, it indicates a highly asymmetric leaf and the annotator has been asked to select a center. The dataset consists
+of individual plant images and accompanying binary images that contain the centroids of each leaf as a single pixel. In the evaluation criteria suggest:
+\begin{itemize}
+\item the difference between the number of leaves in the algorithm result and the ground truth $DiffFGLabels = \#Lar - \#Lgt$,
+\item AbsDiffFGLabels, the absolute value of DiffFGLabels.
+\end{itemize}
+\item - For leaf tracking they provide 4 stacks of 13 images each from Ara2012 and 8 stacks of 17 images each from Ara2013. Leaf-level segmentations are provided
+with leaves that have the same label index throughout the sequence to ensure temporal consistency, with the Nawaz and Cavallaro protocol, which is based on overlap
+criteria, and code available from the authors. When leaves are vertical in the image axis, the overlap criteria may not be able to assign the correct matches;
+\item In boundary estimation they used leaf masks where each leaf labels and found its boundary, to produce a labeled indexed image where '0' is the background,
+'1' denotes a boundary between plant and background, and '2' denotes a boundary between overlapping leaves. This separation can facilitate the training of specialized
+boundary detectors. Typical criteria such as precision and recall are suggested, as well as those that do not penalize small local misalignment, which are suitable for
+evaluating the performance of boundaries between leaves, the MHD, and Minervini;
+\item In classification and regression For mutant and treatment recognition we release individual plant images and a text list denoting for each line image name,
+genotype, treatment type. For treatment type classification, 62 data are currently available from Tobacco. For mutant classification, 165 are currently available
+from Ara2013 and 165 from Ara2013. Because of the diversity of problems considered in this category, for classification problems, precision and recall criteria are
+recommended, and for regression problems, mean absolute error and root-mean-square error between predicted measures and truth are recommended. and ground-truth measures
+are encouraged.
+\end{itemize}
 
 
 
