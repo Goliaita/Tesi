@@ -1,4 +1,4 @@
-% !TEX encoding = UTF-8
+% !TEX encoding = UTF-8x
 % !TEX TS-program = pdflatex
 % !TEX root = ../main.tex
 % !TEX spellcheck = en-EN
@@ -408,17 +408,6 @@ about half of the trainable parameters compared to SegNet or U-Net. As we can se
 followed by U-Net with 31.03 million and SegNet with 33.3 million parameters. This indicates that residual U-Net, although computationally very efficient, achieves
 better results than SegNet and comparable results to U-Net. 
 
-\section{Leaf Segmentation by Functional Modeling}
-
-
-
-
-
-
-
-
-
-
 
 \section{Leaf Counting Without Annotation}
 
@@ -473,6 +462,65 @@ segmentation of spatiotemporal instances for multiple views. In the relevant lit
 performed using a single view image, and may be more difficult than using multiple views.
 
 \subsection{Multi-Modality Plant Imagery Database}
+This dataset consist of 2 main species the first one is Arabidopsis thalian plants were grown at 20°C, in a 16 h/8 h
+day-night cycle with daylight intensity set at $100 \frac{\mu mol photons}{m s}$. The second is black bean plants of the cultivar Jaguar, were
+grown in a day-night cycle of 14 h/10 h with day and night temperatures of 24 and 18°C, respectively, and a daylight intensity set at
+$200 \frac{\mu mol photons}{m s}$. In all cases, seeds were planted in soil covered with a black foam mask to minimize the fluorescence background
+of algal growth. Two-week-old plants (Arabidopsis and bean) were transferred to imaging chambers and allowed to acclimate for 24 hours to
+LED illumination before beginning data collection. Different types of images were collected; fluorescence images were captured once every
+hour during the daylight period in a growth chamber. A series of five images were captured using a Hitachi KP-F145GV CCD camera, during
+a short period of bright light saturating photosynthesis provided by an array of white Cree LEDs. Fluorescence was excited using
+monochromatic red LEDs, collimated using Ledil reflector optics, and pulsed for 50 µ s during a short window when the white LEDs were
+electronically turned off. Infrared images were collected once every hour with the same camera and filter used for chlorophyll a fluorescence.
+RGB color and depth images were collected using a Creative Senz3D sensor. The sensor contains both a 1280×720 color camera oriented parallel
+to, and separated approximately 25 mm from, a depth camera that has a resolution of 320×240 pixels. The depth sensor uses a near IR flash
+illuminator and measures the time-of-flight of the beam in each pixel to obtain depth estimates in each pixel. Low-reflectivity surfaces,
+such as foam under plant leaves, are accurate only at close range. Image data, including fluorescence, IR reflectance, RGB color, and 3D depth images, were
+collected once every hour. Five minutes before the end of each hour, the 3D depth images and color image were captured using the Creative Senz3D sensor,
+followed by fluorescence and IR reflectance images collected sequentially at 2-minute intervals from the CCD camera with IR filter. A planar checkerboard
+model was used to calibrate all three cameras to obtain both intrinsic and extrinsic parameters. While the grid pattern is not visible in the depth image,
+it is still observable in the reflected IR image whose pixels correspond to the depth pixels. The intrinsic and extrinsic parameters are stored as text files,
+and a Matlab function is provided that reads the parameters and can plot the camera positions. Time-of-flight depth measurements can have significant noise,
+and it is useful to both model and quantify it. Depth noise $\epsilon$ is modeled as the sum of an image-dependent term $\epsilon_I$ and a sensor-dependent term
+$\epsilon_S: \epsilon = \epsilon_I + \epsilon_S$. The term $\epsilon_I$ is a random variable for each pixel with a value that varies between successive images
+taken from a fixed pose of a static scene. On the other hand, $\epsilon_S$ is a random variable for each pixel that models its depth offset, and its value changes
+only when the scene changes. The variance of $\epsilon_I$ is estimated for each pixel of a fixed scene observed over multiple images. In our experiments, we observed
+flat albedo and uniform albedo. MSU-PID includes two subsets, one for each plant type: Arabidopsis and bean. Since there is no light at night, the plants cannot
+be captured by the RGB fluorescence and color sensors, while the IR and depth cameras can still perform capture at night. To make sure that all four modes are present
+at the same time, we release the portion of images captured only during daylight hours, which is 15 images per day for Arabidopsis and 13 for bean for all four modes.
+The two subsets differ in image resolutions. For Arabidopsis images, we labeled four frames per day, while for bean images, we labeled seven frames per day due to the
+fast and spontaneous leaf movements of the plant. Leaf labeling can be propagated from fluorescence images to each of the other modes for Arabidopsis sequences. To
+quantify the accuracy of label propagation, we manually labeled three images for each of the three Arabidopsis plants on the fluorescence and RGB modes. The label
+in each mode is propagated on other modes. label propagation to provide labels for all four modes for Arabidopsis sequences. There are two benefits:
+\begin{itemize}
+\item decreases the need for manual labels, 
+\item the labeling is consistent for all four modes.
+\end{itemize}
+In the case of bean images, pixel association between modalities is more difficult because the depth variations within the plant are large. We found that a
+homograph-based mapping worked poorly, and thus the manual annotations we provide apply only to infrared and fluorescence images using the same camera. 
+Leaf segmentation, leaf counting, leaf alignment, and leaf tracking. To facilitate future research, we separate the database into training sets and test sets.
+Forty percent of the data is used for training and 60\% for testing. Specifically, six Arabidopsis plants and two bean plants are selected for training. The user
+can decide to use one or more modes of the plant images for training and testing, respectively. Using RGB and depth modes for training and RGB for testing can
+take advantage of additional information during learning without incurring additional sensor costs during testing, which can be implemented either by learning
+with side information or transferring learning with the missing mode. To evaluate the performance of leaf segmentation, alignment, tracking, and counting, we
+use four performance metrics, whose Matlab implementations will be provided along with the data. Three of them are based on tip-based error, which is defined
+as the average distance of a pair of estimated leaf tips with a pair of labeled leaf tips, normalized by the length of the labeled leaves.
+
+The authors defined a threshold $\tau$ to operate on the corresponding tip-based errors, from this $\tau$ three metrics are calculated:
+\begin{itemize}
+\item Unmatched leaf rate, the percentage of unmatched leaves relative to the total number of labeled leaves. This can be attributed to two sources. The first is missed detections and false alarms. The second is the matched leaves with tip-based errors greater than $\tau$. When $\tau$ is large enough, this value is equal to the leaf count error,
+\item Landmark error, the average of the tip-based errors smaller than $\tau$ of all matched leaves frame-to-frame. It is used to measure the alignment error of the leaf tips,
+\item Tracking consistency, the percentage of matching leaves from video to video whose tip-based errors are smaller than $\tau$. This is used to measure leaf tracking.
+\end{itemize}
+In order to evaluate the accuracy of leaf segmentation, an additional metric based on the Dice score of
+estimated segmentation results and ground truth labels was adopted: Symmetric best Dice, the average of the best symmetric Dice among all labeled leaves.
+The authors treated all images over nine days as a video from the first image on the first day to the last image on the last day. To generate the template set, they first
+selected 12 templates with different aspect ratios from the labeled images in the training set along with the corresponding tip positions. For each template, the
+images are scaled to ten different sizes to cover the full range of leaf sizes in the database. For plant segmentation, we use a simple threshold and edge detection
+process to generate an image mask and an edge map. The best threshold is learned from the training set, which is done by tuning the threshold in a certain range and
+we find the best one by evaluating the overlap of the segmented masks with the ground truth label masks. Firstly, they find the best position of each model in the edge
+map which has the minimum CM distance, secondly, the authors applied multi-leaf alignment, thirdly, they applied multi-leaf tracking. In the tracing process, we delete
+a leaf when it becomes too small. A new leaf is generated when there is a relatively large portion of the mask that has not been covered by the current leaf candidates.
 
 
 
