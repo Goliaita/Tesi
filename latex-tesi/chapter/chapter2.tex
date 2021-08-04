@@ -367,6 +367,48 @@ be seen that descriptors quantified with Fisher Vector consistently perform bett
 This shows that as with 2D descriptors, Fisher Vector is able to encode a more discriminative representation of local descriptors than compared to compared to BoVW.
 Therefore, in aggregating features in fine-tuned PointNet, Fisher Vector was used as a feature quantization technique.
 
+\section{CNN Encoder Decoder for Semantic Segmentation}
+The authors in this paper analyzed, SegNet models based on CNN, U-Net and residual U-Net are used for semantic segmentation of plant images. For data images are involved
+with scaling, normalization and data augmentation. image pixel values are normalized between 0 and 1 by dividing each pixel with 255. Normalization ensures that each pixel
+has a similar distribution which helps fast convergence in the process of training deep neural networks. SegNet is an encoder-decoder type model with 13 convolutional
+layers in the encoder/contraction and decoder/expansion part. Two fully connected layers are used between the encoding and decoding networks, as shown in. Each encoder
+in the encoding network performs 3 × 3 convolution with a filter bank to produce a set of feature maps. Batch normalization is performed after each convolution layer
+followed by a rectified linear unit. There is a decoding layer corresponding to each encoding layer. At each decoding layer, the number of feature channels is reduced
+by half. The decoder samples its input feature map by a factor of 2. These feature maps are applied by repeated $3 \times 3$ convolution with multiple filter banks to produce
+dense feature maps. After each convolution layer, a batch normalization is used along with the ReLU activation function. The output with the multidimensional feature
+map is finally applied to the sigmoid function since we want to separate the plant pixels from the background, which is a two-class classification problem. The U-Net
+architecture includes an encoding network and a decoding network. The encoding network resembles the convolutional neural network. The encoding network includes
+repeated implementations of two $3 \times 3$ convolutions, rectified linear unit activation function, and a $2 \times 2$ max pooling with step
+2 for down sampling. Each down sampling step doubles the number of feature channels. Max pooling helps capture a large context of input images with a
+compact feature map. Decoding helps to obtain more complex features at the loss of location information. At the final layer each 64-dimensional feature vector is mapped
+to the desired number of classes using $1 \times 1$ convolutions. Finally, the sigmoid function is used to classify image pixels as plant and non-plant pixels. In total, the
+network has 23 convolution layers. The modified residual U-Net is constructed using residual blocks and has a similar structure to the U-Net. The residual blocks make
+training easy, while the skipped connections help the information flow without degradation. The combination of batch normalization layer, ReLU activation, and
+convolution layer is repeated twice in each residual block. At each coding layer, instead of max-pooling, a stride of 2 is used for the first convolution operation
+to down-sample the feature map by 2. In the decoder, before each residual block, the lower level feature maps are up-sampled and combined with the feature maps from
+the corresponding coding blocks. After the last decoding layer, a $1 \times 1$ convolution and a sigmoid activation function is used for the segmentation task. Data
+augmentation is used to increase the variations in the dataset. The ReLU activation function is used in both networks in all layers except the output layer, where
+the sigmoid activation function is used. In this paper, a total of 8 evaluation metrics are used to analyze and compare the performance of residual U-Net with SegNet,
+U-Net and existing algorithms available in the literature. The metrics used for the analysis are dice coefficient, precision, recall, f1-measure, specificity, negative 
+predictive value, mean absolute error, and accuracy. In these equations, the true positives are the correctly predicted plant pixels, the false positives are the predicted
+plant pixels that actually belong to the background, the false negatives are the plant pixels present in the ground truth but not predicted by the algorithm, and the
+true negatives are the correctly predicted background pixels. Although the LSC and fig datasets are completely different, residual U-Net and simple U-Net work well on
+both datasets. Dice coefficient is one of the important metrics for image segmentation evaluation as it provides the spatial overlap between the ground truth and the
+output segmented image. All three networks have better segmentation performance for the LSC dataset than the Fig dataset also in terms of other metrics such as precision,
+recall, F1-score. The output masks predicted by U-Net and UNet residuals closely match the truth images, while the masks predicted by SegNet have subtle changes that
+can be observed through visual inspection. These results show that the UNet and U-Net residuals are able to draw accurate boundaries for plant leaves and perform better 
+than SegNet in overlapping leaf segmentation. From these results, we can conclude that, the residues of U-Net and U-Net have comparable segmentation results 
+segmentation results while both networks (U-Net residual and U-Net) perform significantly better than SegNet in predicting leaf shape and boundary areas of fig plants.
+U-Net and U-Net residual have better segmentation results than the state-of-the-art model for fig plant segmentation, while SegNet achieves comparable performance.
+Although there is a less significant difference in segmentation accuracy values, other metrics such as specificity, precision, recall, NPV, and F1 score are significantly
+higher for SegNet, U-Net, and residual U-Net than the state-of-the-art. Since U-Net residual and U-Net have better performance, both these networks are also tested on
+10 high-resolution images of the whole fig field provided in the fig dataset. From the above results and discussion, it is clear that U-Net residual achieves better
+performance than other methods for the LSC dataset and comparable results with U-Net for the fig dataset. U-Net residual achieves this segmentation performance with
+about half of the trainable parameters compared to SegNet or U-Net. As we can see in Table 6, U-Net residual has the lowest, about 15.3 million trainable parameters
+followed by U-Net with 31.03 million and SegNet with 33.3 million parameters. This indicates that residual U-Net, although computationally very efficient, achieves
+better results than SegNet and comparable results to U-Net. 
+
+\section{Leaf Segmentation by Functional Modeling}
 
 
 
@@ -374,6 +416,20 @@ Therefore, in aggregating features in fine-tuned PointNet, Fisher Vector was use
 
 
 
+
+
+
+
+\section{Leaf Counting Without Annotation}
+
+
+
+
+
+
+
+
+\section{Fusing Network Component for Improved Accuracy}
 
 
 
@@ -416,6 +472,7 @@ capture more accurate 3D shapes than when using multiple high-resolution images.
 segmentation of spatiotemporal instances for multiple views. In the relevant literature, instance segmentation has typically been
 performed using a single view image, and may be more difficult than using multiple views.
 
+\subsection{Multi-Modality Plant Imagery Database}
 
 
 
