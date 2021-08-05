@@ -432,7 +432,7 @@ Since one RGB-D camera was attached to capture the entire part of the toolkit, e
 and labeled as a label image. In order to use the dataset for temporal leaf tracking, the same leaf label was assigned to the same leaf in
 images captured at different times. The original camera resolution was 640 × 480 and the resolution of the plant images was, for example,
 166 × 190 pixels. Because the viewpoints of the RGB and depth images were aligned by the camera library, the labels were valid for both images.
-Due to the mismatch between RGB and depth camera, the resulting images were not aligned, so the depth image was aligned into an RGB image in our
+Due to the mismatch between RGB and depth camera, the resulting images were not aligned, so the depth image was aligned into an RGB image in their
 platform. For this reason, the authors provided the original depth image and a transformation matrix from the depth image viewpoint to the RGB image
 viewpoint so that the point cloud could also be transformed as needed without any interpolation.
 
@@ -523,10 +523,10 @@ system included:
 \end{itemize}
 Tobacco plants were grown in $7\times7$cm pots under constant light conditions with a day/night rhythm of 16h/8h. Images show growth stages from germination to leaf
 development, early observations at the growth stage. A significant number of object-based annotations, bounding boxes, can be computationally obtained based on
-pixel-level segmentation masks of plants and leaves, respectively, that were manually annotated by experts. The annotation consisted of three steps. First, we obtained
-a binary segmentation of plant objects in the scene in a computer-assisted manner. For Arabidopsis, we used the active contour-based approach described by Minervini et al.
+pixel-level segmentation masks of plants and leaves, respectively, that were manually annotated by experts. The annotation consisted of three steps. First, they obtained
+a binary segmentation of plant objects in the scene in a computer-assisted manner. For Arabidopsis, they used the active contour-based approach described by Minervini et al.
 While for tobacco, a simple color-based approach was used for plant segmentation. The result of this segmentation was manually refined using raster graphic editing software
-to ensure that all visible part of the shoot is included in the plant mask and the background is excluded. Next, within the binary mask of each plant, we outlined the
+to ensure that all visible part of the shoot is included in the plant mask and the background is excluded. Next, within the binary mask of each plant, The authors outlined the
 individual leaves completely manually. To reduce observer variability and increase accuracy, the labeling process always involved two annotators: one annotating the
 dataset and one checking the other. To reduce observer variability and increase accuracy, the labeling process always involved two annotators: one annotating the
 dataset and one checking the other. On secondary inspection of the data, annotators recorded additional categorical qualitative annotations such as: estimated difficulty
@@ -555,7 +555,7 @@ criteria, and code available from the authors. When leaves are vertical in the i
 '1' denotes a boundary between plant and background, and '2' denotes a boundary between overlapping leaves. This separation can facilitate the training of specialized
 boundary detectors. Typical criteria such as precision and recall are suggested, as well as those that do not penalize small local misalignment, which are suitable for
 evaluating the performance of boundaries between leaves, the MHD, and Minervini;
-\item In classification and regression For mutant and treatment recognition we release individual plant images and a text list denoting for each line image name,
+\item In classification and regression For mutant and treatment recognition the authors release individual plant images and a text list denoting for each line image name,
 genotype, treatment type. For treatment type classification, 62 data are currently available from Tobacco. For mutant classification, 165 are currently available
 from Ara2013 and 165 from Ara2013. Because of the diversity of problems considered in this category, for classification problems, precision and recall criteria are
 recommended, and for regression problems, mean absolute error and root-mean-square error between predicted measures and truth are recommended. and ground-truth measures
