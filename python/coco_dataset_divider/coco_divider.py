@@ -13,7 +13,7 @@ parser.add_argument('--path_o', type=str, required=True,
                     help='Path to folder where write JSON files')
 parser.add_argument('--training_percentage', type=int, default=60,
                     help='Training split size')
-parser.add_argument('--validation_percentage', type=int, default=40,
+parser.add_argument('--validation_percentage', type=int, default=20,
                     help='Validation split size')
 args = parser.parse_args()
 
@@ -32,11 +32,14 @@ def data_divider(json_in: json, t_percentage, v_percentage):
 
     validation_set_pic = int(len(json_images["images"])/100*v_percentage)
 
-    test_set_pic = int(len(json_images["images"]) - training_set_pic - validation_set_pic)
+    test_set_pic = training_set_pic + validation_set_pic
 
     training_json["images"]     = json_images["images"][:training_set_pic]
     valid_json["images"]        = json_images["images"][training_set_pic+1:test_set_pic]
     test_json["images"]         = json_images["images"][test_set_pic+1:]
+
+    print("The dataset was split as training set: {}, validation set: {}, test set: {}"
+    .format(len(training_json["images"]), len(valid_json["images"]), len(test_json["images"])))
 
     training_json["categories"] = json_in["categories"]
     valid_json["categories"] = json_in["categories"]
@@ -82,6 +85,10 @@ def json_write(path, training, validation, test_):
 
 
 if __name__=='__main__':
+
+    if args.training_percentage+args.validation_percentage == 100:
+        print("Error no training set split found compute the percentage again")
+        exit()
 
     original_json = json_read(args.path_i)
 
