@@ -289,4 +289,5 @@ saved_images*
 trash/
 .ipynb_checkpoints/
 test/
-
+02_count/
+01_binary_segment
