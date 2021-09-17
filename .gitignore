@@ -296,3 +296,4 @@ yolact/
 detr/
 images/
 img/
+*.txt
