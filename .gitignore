@@ -291,3 +291,8 @@ trash/
 test/
 02_count/
 01_binary_segment
+
+yolact/
+detr/
+images/
+img/
