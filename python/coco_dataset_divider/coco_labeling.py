@@ -13,15 +13,13 @@ import matplotlib.pyplot as plt
 
 
 parser = argparse.ArgumentParser(
-    description='Transform labeled images into coco format')
-parser.add_argument("--path_label", type=str, required=False, help="Path to labeled images", default="./images/")
-parser.add_argument("--path_images", type=str, required=True, help="Path to images")
-parser.add_argument("--out_path", type=str, required=True, help="Path where save the file")
-parser.add_argument("--saved_data", type=str, required=False, help="Path where are saved the segmentation about plants",
-    default=None)
-parser.add_argument("--mpi", type=bool, required=False,
-    help="Run the program as a parallel version (must run with mpiexec) (only for the reading part)",
-    default=False)
+    description='Transform labeled images into coco format (only one category is accepted, no more than one can be interpreted),\
+        change the category name and data inside this file')
+parser.add_argument("--path_label", type=str, required=False, help="Path to labeled images", default="./label/")
+parser.add_argument("--path_images", type=str, required=False, help="Path to images", default="./images")
+parser.add_argument("--out_path", type=str, help="Path where save the file, that will be saved as coco_labeled.json", default="./")
+parser.add_argument("--mpi", action='store_true',
+    help="Run the program as a parallel version (must run with mpiexec) (only for the reading part)")
 
 args = parser.parse_args()
 
@@ -80,6 +78,9 @@ def coco_label_creator(label_path: str, ids=None, rank=0):
     image_colors = []
     if ids is not None:
         listed_images = listed_images[ids[0]:ids[1]]
+        total_images = ids[1] - ids[0]
+    else:
+        total_images = 0
 
     l = 0
     for img_name in listed_images:
@@ -108,7 +109,7 @@ def coco_label_creator(label_path: str, ids=None, rank=0):
                                 colors.append(img[i,j])
                                 color = len(colors) - 1
                                 
-                        json_image = np.append(json_image, (l, i, j, color), axis=0)
+                        json_image = np.append(json_image, (l + (total_images * rank), i, j, color), axis=0)
 
                 except:
                     print("Error at image {}".format(img_name)) 
@@ -230,96 +231,55 @@ def compose_json(labels, colors, img_path):
     return composed_json
 
 if __name__=="__main__":
-    if args.saved_data is None:
-
-        if mpi:
-            world = MPI.COMM_WORLD
-            agents_number = world.Get_size()
-            rank = world.Get_rank()
-            listed = os.listdir(args.path_label)
-            portion = len(listed) / agents_number
-            ids = [int(rank * portion), int((rank * portion) + portion)]
-            print("Agent ", rank, " got ", portion, " rows of dataset")
-            sys.stdout.flush()
-        else:
-            ids = None
-            rank = 0
-        
-        
-        label, colors = coco_label_creator(args.path_label, ids, rank)
-
-        if mpi:
-            print("Rank: {} finished to extract shape from images".format(rank))
-        else:
-            print("Finished to extract shape from images")
-
-        sys.stdout.flush()
-
-        label = label.reshape((-1, 4))
-
-        if mpi:
-            world.Barrier()
-            results = world.gather(label, root=0) 
-            results_colors = world.gather(colors, root=0)
-            
-            if rank == 0:
-                sys.stdout.flush()
-                merge_data = []
-                merge_colors = []
-                for j in results:
-                    merge_data = np.append(merge_data, j)
-                for j in results_colors:
-                    merge_colors = np.append(merge_colors, j)
-                merge_data = merge_data.reshape((-1,4))
-                merge_colors = merge_colors.reshape((-1,1))
-
-
-                saving_data = open("./data_saved.txt", "w+")
-                saving_colors = open("./colors_saved.txt", "w+")
-
-                saving_data.write(str(merge_data.tolist()))
-                saving_colors.write(str(merge_colors.tolist()))
-        else:
-            saving_data = open("./data_saved.txt", "w+")
-            saving_colors = open("./colors_saved.txt", "w+")
-
-            saving_data.write(str(label))
-            saving_colors.write(str(colors))
-
-    else: 
-        saved_data = open(args.saved_data + "data_saved.txt", "r")
-        saved_colors = open(args.saved_data + "colors_saved.txt", "r")
-
-        
-        label_buff = saved_data.read()
-        colors_buff = saved_colors.read()
-
-        label_buff = label_buff.replace("[", '')
-        label_buff = label_buff.replace("]", '')
-        label_buff = label_buff.replace(",", '')
-        label_buff = label_buff.replace(".0", '')
-
-        colors_buff = colors_buff.replace("[", '')
-        colors_buff = colors_buff.replace("]", '')
-        colors_buff = colors_buff.replace(",", '')
-        colors_buff = colors_buff.replace(".0", '')
-
-        label  = np.asarray(label_buff.split(" "), dtype=int)
-        colors = np.asarray(colors_buff.split(" "), dtype=int)
-
-
-        label = label.reshape(-1, 4)
-        print("data loaded")
 
     if mpi:
+        world = MPI.COMM_WORLD
+        agents_number = world.Get_size()
+        rank = world.Get_rank()
+        listed = os.listdir(args.path_label)
+        portion = len(listed) / agents_number
+        ids = [int(rank * portion), int((rank * portion) + portion)]
+        print("Agent ", rank, " got ", portion, " rows of dataset")
+        sys.stdout.flush()
+    else:
+        ids = None
+        rank = 0
+    
+    
+    label, colors = coco_label_creator(args.path_label, ids, rank)
+
+    if mpi:
+        print("Rank: {} finished to extract shape from images".format(rank))
+    else:
+        print("Finished to extract shape from images")
+
+    sys.stdout.flush()
+
+    label = label.reshape((-1, 4))
+
+    if mpi:
+        world.Barrier()
+        results = world.gather(label, root=0) 
+        results_colors = world.gather(colors, root=0)
+        
         if rank == 0:
+            sys.stdout.flush()
+            merge_data = []
+            merge_colors = []
+            for j in results:
+                merge_data = np.append(merge_data, j)
+            for j in results_colors:
+                merge_colors = np.append(merge_colors, j)
+            label = merge_data.reshape((-1,4))
+            colors = merge_colors.reshape((-1,1))
+
             my_json = compose_json(label, colors, args.path_images)
 
             print("Json composed writing out...")
 
             sys.stdout.flush()
 
-            coco_file = open(args.out_path + "/komatsuna_coco.json", "w+")
+            coco_file = open(args.out_path + "/coco_labeled.json", "w+")
 
             coco_file.write(json.dumps(my_json))
 
@@ -332,7 +292,7 @@ if __name__=="__main__":
 
         sys.stdout.flush()
 
-        coco_file = open(args.out_path + "/komatsuna_coco.json", "w+")
+        coco_file = open(args.out_path + "/coco_labeled.json", "w+")
 
         coco_file.write(json.dumps(my_json))
 

@@ -11,9 +11,9 @@ parser.add_argument('--path_i', type=str, required=True,
                     help='Path to original JSON file')
 parser.add_argument('--path_o', type=str, required=True,
                     help='Path to folder where write JSON files')
-parser.add_argument('--training_percentage', type=int, default=60,
+parser.add_argument('--training', type=int, default=60,
                     help='Training split size')
-parser.add_argument('--validation_percentage', type=int, default=20,
+parser.add_argument('--validation', type=int, default=20,
                     help='Validation split size')
 args = parser.parse_args()
 

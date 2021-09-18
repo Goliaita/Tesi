@@ -296,4 +296,5 @@ yolact/
 detr/
 images/
 img/
+label/
 *.txt
