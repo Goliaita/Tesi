@@ -298,3 +298,4 @@ images/
 img/
 label/
 *.txt
+coco_labeled.json

@@ -35,10 +35,13 @@ else:
     mpi = False
 
 def order_segmentation(segmented_array, index):
+
     array_in = segmented_array.copy()
-    array_in = array_in.reshape((-1,2))
+    array_in = np.asarray(array_in).reshape((-1,2))
+
     array_buff = []
     array_buff = np.append(array_buff, [segmented_array[0], segmented_array[1]])
+
     array_in = np.delete(array_in, 0, axis=0)
 
     for i in range(2, len(segmented_array), 2):
@@ -124,7 +127,7 @@ def coco_label_creator(label_path: str, ids=None, rank=0):
     return json_image, image_colors
 
 
-def compose_json(labels, colors, img_path):
+def compose_json(labels, colors, img_path, ids=None, rank=0):
 
     composed_json                   = {}
     composed_json["images"]         = []
@@ -141,6 +144,13 @@ def compose_json(labels, colors, img_path):
     milliseconds = 0
     events = []
     regenerate_thumbnail = False
+    listed_imgs = os.listdir(img_path)
+
+    if ids is not None:
+        listed_imgs = listed_imgs[ids[0]:ids[1]]
+        total_images = ids[1] - ids[0]
+    else:
+        total_images = 0
 
     
 
@@ -156,14 +166,13 @@ def compose_json(labels, colors, img_path):
     print("Added the categories")
     sys.stdout.flush()
 
-    listed_imgs = os.listdir(img_path)
     id = 0
     for img in listed_imgs:
 
         image = plt.imread(img_path + "/" + img)
 
         compose_json = {
-            "id": id,
+            "id": id + (rank * total_images),
             "dataset_id": dataset_id,
 			"category_ids": category_ids,
 			"path": img_path + img,
@@ -189,13 +198,13 @@ def compose_json(labels, colors, img_path):
     print("Added all images")
     sys.stdout.flush()
 
-    for i in range(max_id):
-        for j in range(int(colors[i])):
+    for i in range(rank*total_images, max_id):
+        for j in range(int(colors[i - rank * total_images])):
             segmentation = []
             max_x = 0
             max_y = 0
-            min_x = composed_json["images"][i]["width"]
-            min_y = composed_json["images"][i]["height"]
+            min_x = composed_json["images"][i - rank * total_images]["width"]
+            min_y = composed_json["images"][i - rank * total_images]["height"]
             for label in labels:
                 if i == label[0] and j == label[3]:
                     segmentation = np.append(segmentation, [[label[2], label[1]]])
@@ -228,6 +237,13 @@ def compose_json(labels, colors, img_path):
             id += 1
             composed_json["annotations"].append(buff_json)
 
+        if id % 10 == 0:
+            if ids is not None:
+                print("Rank: {}, has elaborated {} images of {}".format(rank, id, total_images))
+            else:
+                print("Process has elaborated {} images of {}".format(rank, id, max_id))
+        sys.stdout.flush()
+
     return composed_json
 
 if __name__=="__main__":
@@ -259,29 +275,34 @@ if __name__=="__main__":
 
     if mpi:
         world.Barrier()
-        results = world.gather(label, root=0) 
-        results_colors = world.gather(colors, root=0)
         
+        my_json = compose_json(label, colors, args.path_images, ids, rank)
+
+        all_json = world.gather(my_json, root=0)
+
         if rank == 0:
-            sys.stdout.flush()
-            merge_data = []
-            merge_colors = []
-            for j in results:
-                merge_data = np.append(merge_data, j)
-            for j in results_colors:
-                merge_colors = np.append(merge_colors, j)
-            label = merge_data.reshape((-1,4))
-            colors = merge_colors.reshape((-1,1))
+            result                  = {}
+            result["images"]        = []
+            result["categories"]    = []
+            result["annotations"]   = []
+            result["categories"] = np.append(result["categories"], my_json["categories"])
+            
+            for list_ in all_json:
+                for i in range(len(list_["images"])):
+                    result["images"] = np.append(result["images"], list_["images"][i])
+                for i in range(len(list_["annotations"])):
+                    result["annotations"] = np.append(result["annotations"], list_["annotations"][i])
 
-            my_json = compose_json(label, colors, args.path_images)
-
+            result["images"] = result["images"].tolist()
+            result["categories"] = result["categories"].tolist()
+            result["annotations"] = result["annotations"].tolist()
             print("Json composed writing out...")
 
             sys.stdout.flush()
 
             coco_file = open(args.out_path + "/coco_labeled.json", "w+")
 
-            coco_file.write(json.dumps(my_json))
+            coco_file.write(json.dumps(result))
 
             print("... Wrote finished the task")
             sys.stdout.flush()
