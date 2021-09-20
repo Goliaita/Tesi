@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser(
     description='Transform labeled images into coco format (only one category is accepted, no more than one can be interpreted),\
         change the category name and data inside this file')
 parser.add_argument("--path_label", type=str, required=False, help="Path to labeled images", default="./label/")
-parser.add_argument("--path_images", type=str, required=False, help="Path to images", default="./images")
+parser.add_argument("--path_images", type=str, required=False, help="Path to images", default="./images/")
 parser.add_argument("--out_path", type=str, help="Path where save the file, that will be saved as coco_labeled.json", default="./")
 parser.add_argument("--mpi", action='store_true',
     help="Run the program as a parallel version (must run with mpiexec) (only for the reading part)")
@@ -59,7 +59,7 @@ def order_segmentation(segmented_array, index):
                         .format(index, k, i, array_in.shape, array_buff.shape))
                     print(next)
                 sys.stdout.flush()
-                exit()
+                # exit()
 
             if counter > buff:
                 counter = buff
@@ -199,6 +199,7 @@ def compose_json(labels, colors, img_path, ids=None, rank=0):
     sys.stdout.flush()
 
     for i in range(rank*total_images, max_id):
+        
         for j in range(int(colors[i - rank * total_images])):
             segmentation = []
             max_x = 0
@@ -220,7 +221,11 @@ def compose_json(labels, colors, img_path, ids=None, rank=0):
             random_number = random.randint(0,16777215)
             hex_number = str(hex(random_number))
             hex_number ='#'+ hex_number[2:]
-            segmentation = order_segmentation(segmentation, i)
+            try:
+                segmentation = order_segmentation(segmentation, i)
+            except:
+                print("Photo {}, at element {}".format(i, j))
+                exit()
 
             buff_json = {
                 "id": id,
@@ -239,9 +244,9 @@ def compose_json(labels, colors, img_path, ids=None, rank=0):
 
         if id % 10 == 0:
             if ids is not None:
-                print("Rank: {}, has elaborated {} images of {}".format(rank, id, total_images))
+                print("Rank: {}, has elaborated {} images of {}".format(rank, i, total_images))
             else:
-                print("Process has elaborated {} images of {}".format(rank, id, max_id))
+                print("Process has elaborated {} picture at object {}".format(i, j))
         sys.stdout.flush()
 
     return composed_json
@@ -304,7 +309,7 @@ if __name__=="__main__":
 
             coco_file.write(json.dumps(result))
 
-            print("... Wrote finished the task")
+            print("... Wrote, finished the task")
             sys.stdout.flush()
     else:
         my_json = compose_json(label, colors, args.path_images)
@@ -317,7 +322,7 @@ if __name__=="__main__":
 
         coco_file.write(json.dumps(my_json))
 
-        print("... Wrote finished the task")
+        print("... Wrote, finished the task")
         sys.stdout.flush()
 
 
