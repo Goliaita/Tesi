@@ -1,32 +1,48 @@
-@BOOK{DUMMY:1,
-AUTHOR="John Doe",
-TITLE="The Book without Title",
-PUBLISHER="Dummy Publisher",
-YEAR="2100",
+@article{LIU2020105753,
+	title    = {Automatic segmentation of overlapped poplar seedling leaves combining Mask R-CNN and DBSCAN},
+	journal  = {Computers and Electronics in Agriculture},
+	volume   = {178},
+	pages    = {105753},
+	year     = {2020},
+	issn     = {0168-1699},
+	doi      = {https://doi.org/10.1016/j.compag.2020.105753},
+	url      = {https://www.sciencedirect.com/science/article/pii/S0168169920311777},
+	author   = {Xuan Liu and Chunhua Hu and Pingping Li},
+	keywords = {Mask R-CNN, Feature fusion, Manifold distance, Leaf segmentation, RGB-D camera},
+	abstract = {Effective segmentation of plant leaves is very necessary for non-contact extraction of plant leaf phenotype, especially leaf phenotype under environmental stress. However, the phenotype of leaves will change due to the influence of the environment, which increases the difficulty of detection. In this study, we proposed an accurate automatic segmentation method that combines Mask R-CNN with Density-Based Spatial Clustering of Applications with Noise (DBSCAN) clustering algorithm based on RGB-D camera to segment overlapped poplar seedling leaves under heavy metal stress. Firstly, an effective encoding method of depth information was used to facilitate the feature extraction of depth information. Next, we deployed Mask R-CNN to train the RGB-D data and fuse their features in the FPN structure to obtain more accurate leaf areas. Based on the detected leaf areas and depth data, DBSCAN based on manifold distance was then applied to segment a single leaves from overlapping leaves in the detected areas. Several analyses were performed to evaluate the performance of the proposed method, including the comparison of our network with classic Mask R-CNN and the comparison of DBSCAN based on manifold distance with other classic clustering methods. We used the pixel-wise Intersection over Union (p-IoU) to evaluate the detection results more accurately. In the experiments, the obtained p-IoU of normal and stressed leaves was 0.885 and 0.874, respectively, with corresponding mean accuracy values of 0.897 and 0.888. From our experimental results, it can be concluded that the proposed method can automatically detect leaves with high accuracy, which can be applied to 3-D leaf phenotype research and automatic plant de-leafing.}
+}
+@article{KOLHAR2021101373,
+	title    = {Convolutional neural network based encoder-decoder architectures for semantic segmentation of plants},
+	journal  = {Ecological Informatics},
+	volume   = {64},
+	pages    = {101373},
+	year     = {2021},
+	issn     = {1574-9541},
+	doi      = {https://doi.org/10.1016/j.ecoinf.2021.101373},
+	url      = {https://www.sciencedirect.com/science/article/pii/S1574954121001643},
+	author   = {Shrikrishna Kolhar and Jayant Jagtap},
+	keywords = {Plant leaf segmentation, Fig plant segmentation, Residual U-Net, SegNet, Plant semantic segmentation},
+	abstract = {Recent advancements in the area of computer vision-based plant phenotyping are playing an important role, in determining the quantitative phenotypes of plants, and crop yield. Automatic segmentation of plants and its associated structures is the first and most important step in image based plant phenotyping. We design and implement convolutional neural network (CNN) based modified residual U-Net for semantic segmentation of plants from the background. We also use SegNet and U-Net architectures for comparison purpose. In this paper, residual U-Net, SegNet and U-Net models are tested on leaf segmentation challenge (LSC) dataset and fig dataset that are publicly available. LSC dataset consists of images of Arabidopsis and tobacco plants grown under controlled conditions whereas fig dataset includes top view images of fig plants captured in open-field conditions. We have used 8 evaluation metrics for analyzing and comparing the performance of residual U-Net, SegNet and U-Net architectures with the existing algorithms in the literature. Residual U-Net with 15.32 million trainable parameters, outperforms SegNet and other state-of-the-art methods whereas achieves comparable performance with respect to U-Net. Residual U-Net achieves dice coefficient of 0.9709 on LSC dataset and 0.9665 on fig dataset, respectively. The segmentation networks used in this paper can be used for other plant related applications such as plant trait estimation or in quantification of plant stress.}
 }
 
-@article{einstein,
-    author =       "Albert Einstein",
-    title =        "{Zur Elektrodynamik bewegter K{\"o}rper}. ({German})
-        [{On} the electrodynamics of moving bodies]",
-    journal =      "Annalen der Physik",
-    volume =       "322",
-    number =       "10",
-    pages =        "891--921",
-    year =         "1905",
-    DOI =          "http://dx.doi.org/10.1002/andp.19053221004"
+@inproceedings{Aich_2017_ICCV,
+	author    = {Aich, Shubhra and Stavness, Ian},
+	title     = {Leaf Counting With Deep Convolutional and Deconvolutional Networks},
+	booktitle = {Proceedings of the IEEE International Conference on Computer Vision (ICCV) Workshops},
+	month     = {Oct},
+	year      = {2017}
 }
- 
-@book{latexcompanion,
-    author    = "Michel Goossens and Frank Mittelbach and Alexander Samarin",
-    title     = "The \LaTeX\ Companion",
-    year      = "1993",
-    publisher = "Addison-Wesley",
-    address   = "Reading, Massachusetts"
+
+@inproceedings{9411981,
+	author    = {Bhugra, Swati and Garg, Kanish and Chaudhury, Santanu and Lall, Brejesh},
+	booktitle = {2020 25th International Conference on Pattern Recognition (ICPR)},
+	title     = {A Hierarchical Framework for Leaf Instance Segmentation: Application to Plant Phenotyping},
+	year      = {2021},
+	volume    = {},
+	number    = {},
+	pages     = {10173-10179},
+	doi       = {10.1109/ICPR48806.2021.9411981}
 }
- 
-@misc{knuthwebsite,
-    author    = "Donald Knuth",
-    title     = "Knuth: Computers and Typesetting",
-    url       = "http://www-cs-faculty.stanford.edu/\~{}uno/abcde.html"
-}
+
+
+

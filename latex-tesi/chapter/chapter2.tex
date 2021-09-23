@@ -207,7 +207,7 @@ representative shapes, especially at later growth stages. Based on the database 
 multi-leaf pattern matching was not frequently used because the generated leaf candidates comprised 90\% of the input segmented mask. This was due to the
 non-overlapping scenarios observed in these images. However, it also led to the neglect of leaves that were highly. The comparative study demonstrates the
 efficiency of their proposed structure in relation to different plant species. The strategy to extract non-occluded leaves involves the automatic generation
-of shape priors, which can be further used to segment individual leaves into overlapping regions in the image.
+of shape priors, which can be further used to segment individual leaves into overlapping regions in the image.\cite{9411981}
 
 \section{Multi-Task Plant Phenotyping}
 The main discussion of this paper is the ACID dataset consisting of a doubled haploid population of spring wheat plants was obtained from the Nottingham/BBSRC
@@ -300,7 +300,7 @@ augmented 8 times using intensity saturation, Gaussian blur and sharpening, and 
 right and rotated. After data generation, the counting or regression network was trained for 40 epochs using Adam with a fixed learning rate. The authors found that
 their predictions can be accurate for easier samples with no leaf overlap or moderate leaf size or both, but deteriorate for more difficult cases with smaller or overlapping
 leaves. In this sense, their generalized framework is able to model and infer leaf shapes under deformation and partial occlusion better than their main competitor given a
-few hundred images for a particular species.
+few hundred images for a particular species.\cite{Aich_2017_ICCV}
 
 \section {Weed Growth Estimator with CNN}
 In this research, a CNN was used to count the number of leaves on 18 different weed species or families. However, deep CNNs need to be trained on a large number of images
@@ -406,7 +406,7 @@ higher for SegNet, U-Net, and residual U-Net than the state-of-the-art. Since U-
 performance than other methods for the LSC dataset and comparable results with U-Net for the fig dataset. U-Net residual achieves this segmentation performance with
 about half of the trainable parameters compared to SegNet or U-Net. As they can see in Table 6, U-Net residual has the lowest, about 15.3 million trainable parameters
 followed by U-Net with 31.03 million and SegNet with 33.3 million parameters. This indicates that residual U-Net, although computationally very efficient, achieves
-better results than SegNet and comparable results to U-Net. 
+better results than SegNet and comparable results to U-Net.\cite{KOLHAR2021101373}
 
 
 \section{Automatic segmentation combining Mask RCNN}
@@ -439,11 +439,8 @@ when segmenting neighboring leaves that overlap. Because of the overlap, the aut
 the detected leaf area into a 3-D point cloud. Then, using the proposed clustering algorithm, the target leaf was successfully separated from the overlapping leaf. In
 object detection, on the other hand, Intersection over Union (IoU) is often used as a metric to evaluate the accuracy of bounding box location, but the accuracy of
 pixel segmentation cannot be indicated. In leaf phenotype research, the accuracy of leaf pixel detection is more important than leaf pixel localization. In conclusion,
-the proposed method could facilitate the study of 3-D lead phenotype search and improve the accuracy of automatic leaf segmentation.
-
-\section{Leaf Segmentation and Counting with Deep Learning}
-
-
+the proposed method could facilitate the study of 3-D lead phenotype search and improve the accuracy of automatic leaf segmentation.\cite{LIU2020105753}
+ 
 
 
 
