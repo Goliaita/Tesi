@@ -299,3 +299,5 @@ img/
 label/
 *.txt
 coco_labeled.json
+result*/
+

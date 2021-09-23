@@ -409,6 +409,51 @@ followed by U-Net with 31.03 million and SegNet with 33.3 million parameters. Th
 better results than SegNet and comparable results to U-Net. 
 
 
+\section{Automatic segmentation combining Mask RCNN}
+This paper proposed a combination of deep learning and point cloud clustering methods to detect individual leaves. Point cloud processing algorithms are very time
+consuming. By combining the point cloud processing algorithm with deep learning, the proposed method clusters only the point clouds in the area detected by Mask R-CNN,
+which greatly reduces the processing time. The depth information is important to improve the detection accuracy, and can provide complementary information to the color
+image and can help separate overlapping leaves. In Their study the authors introduced the feature mapping approach to fuse the features of color and depth data into the FPN
+structure during the R-CNN Mask formation process to improve the detection performance. The authors used Mask R-CNN to train the RGB-D data and the resulting features
+to the FPN structure, to improve the fusion of RGB-D information. The Mask R-CNN algorithm was used by the authors to detect pixel-level state-changing leaves in their
+study. First, the input data are transformed into feature maps through the backbone. Then, a network of region proposals is employed on the feature maps to generate
+region proposals. Then, through the RoIAlign process, the extracted features with the input image are aligned correctly. Finally, the features obtained by RoIAlign are
+fed to the fully connected layers for classification and bounding box regression, and also fed to the convolution layer for segmentation to obtain binary masks.
+Unlike simply overlaying the color and depth data for training, they train them separately. To combine the information from the input color and depth data into
+the Mask R-CNN backbone, we merge the feature pyramid of the depth data into the feature pyramid of the RGB data. The fusion operation is implemented as a summation
+of the features. Thus, each feature layer after fusion contains both color and depth features. When deep learning is used for leaf detection, the detected leaf areas
+may be inaccurate, may contain neighboring leaves or background pixels. To separate target leaves from overlapping leaves in R-CNN Mask detection results, the clustering
+method based on spatial information is commonly adopted. Among the common clustering algorithms in leaf detection studies, DBSCAN is always used.
+During training, the authors observed that after a number of epochs, the validation set loss begins to show an increasing trend while the training loss is still decreasing,
+indicating over-fitting of the model. Therefore, the number of training epochs is set as 20, selecting the last epoch that did not exhibit overfit. To analyze the quality
+of segmentation results, we adopted the Precision-Recall curve, average precision (AP), and F1 score as evaluation metrics. The detected leaf areas are more than 70\%
+coincident with the ground truth. In a similar study, an AP of 0.899 was acquired. While their data set is quite different from theirs. The performance of Mask R-CNN
+was evaluated in terms of AP and F1-score. A confidence threshold of 0.7 was selected to obtain their performance values. Comparing the results, our network with
+preprocessing gave the best performance with an F1-score of 0.825 and an AP of 0.912, followed by the network without preprocessing with an F1-score of 0.803 and
+an AP of 0.892. However, the classical Mask R-CNN network only achieved an F1-score of 0.791 and an AP of 0.877. Thus, the performance of our network is superior to
+that of the classical Mask R-CNN network in our dataset. In addition, the use of preprocessing on the depth information also helps to improve the accuracy of the model.
+The DBSCAN clustering results of normal leaves based on Euclidean distance and manifold distance are similar. This is because the normal leaf is relatively flat, so
+the difference between the Euclidean distance and the manifold distance is small. While the Euclidean clustering algorithm, and can only detect the points with a greater
+distance from the leaf instead of the whole noise clusters, with the noise points closer to the leaf not detected. DBSCAN based on manifold distance achieves good results
+when segmenting neighboring leaves that overlap. Because of the overlap, the authors used the depth map obtained from the RGB-D camera and the camera parameters to convert
+the detected leaf area into a 3-D point cloud. Then, using the proposed clustering algorithm, the target leaf was successfully separated from the overlapping leaf. In
+object detection, on the other hand, Intersection over Union (IoU) is often used as a metric to evaluate the accuracy of bounding box location, but the accuracy of
+pixel segmentation cannot be indicated. In leaf phenotype research, the accuracy of leaf pixel detection is more important than leaf pixel localization. In conclusion,
+the proposed method could facilitate the study of 3-D lead phenotype search and improve the accuracy of automatic leaf segmentation.
+
+\section{Leaf Segmentation and Counting with Deep Learning}
+
+
+
+
+
+
+
+
+
+
+
+
 \section{Available Dataset}
 
 \subsection{3D Phenotyping for Komatsuna dataset}
