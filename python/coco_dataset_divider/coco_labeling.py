@@ -87,7 +87,7 @@ def coco_label_creator(label_path: str, ids=None, rank=0):
 
     l = 0
     for img_name in listed_images:
-        img = plt.imread(label_path + "/" + img_name)
+        img = plt.imread(label_path + img_name)
         colors = []
         for i in range(img.shape[0]-2):
             for j in range(img.shape[1]-2):
@@ -168,25 +168,25 @@ def compose_json(labels, colors, img_path, ids=None, rank=0):
 
     id = 0
     for img in listed_imgs:
-
-        image = plt.imread(img_path + "/" + img)
+        
+        image = plt.imread(img_path + img)
 
         compose_json = {
             "id": id + (rank * total_images),
             "dataset_id": dataset_id,
-			"category_ids": category_ids,
-			"path": img_path + img,
-			"width": image.shape[0],
-			"height": image.shape[1],
-			"file_name": img,
-			"annotated": annotated,
-			"annotating": annotating,
-			"num_annotations": num_annotations,
-			"metadata": metadata,
-			"deleted": deleted,
-			"milliseconds": milliseconds,
-			"events": events,
-			"regenerate_thumbnail": regenerate_thumbnail
+            "category_ids": category_ids,
+            "path": img_path + img,
+            "width": image.shape[0],
+            "height": image.shape[1],
+            "file_name": img,
+            "annotated": annotated,
+            "annotating": annotating,
+            "num_annotations": num_annotations,
+            "metadata": metadata,
+            "deleted": deleted,
+            "milliseconds": milliseconds,
+            "events": events,
+            "regenerate_thumbnail": regenerate_thumbnail
         }
         composed_json["images"].append(compose_json)
 
@@ -252,6 +252,26 @@ def compose_json(labels, colors, img_path, ids=None, rank=0):
     return composed_json
 
 if __name__=="__main__":
+    print(args.path_label)
+    # divider_nt = "\\"
+    # divider_linux = "/"
+    # if os.name == "nt":
+    #     divider = divider_nt
+    #     try:
+    #         args.path_images = args.path_images.replace(divider_linux, divider_nt)
+    #         args.path_label = args.path_label.replace(divider_linux, divider_nt)
+    #         args.out_path = args.out_path.replace(divider_linux, divider_nt)
+            
+    #     except Exception as e:
+    #         print(e)
+    # else:
+    #     divider = divider_linux
+    #     try:
+    #         args.path_images = args.path_images.replace(divider_linux, divider_nt)
+    #         args.path_label = args.path_label.replace(divider_linux, divider_nt)
+    #         args.out_path = args.out_path.replace(divider_linux, divider_nt)
+    #     except Exception as e:
+    #         print(e)
 
     if mpi:
         world = MPI.COMM_WORLD
