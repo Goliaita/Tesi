@@ -7,7 +7,7 @@
 
 \section{Plant Phenotyping}
 
-Plant phenotyping has been recognized as a bottleneck for improving the efficiency of breeding programs. In recent years, image-based approaches
+Plant phenotyping has been recognized as a bottleneck \cite{4152816} for improving the efficiency of breeding programs. In recent years, image-based approaches
 have shown great potential for high-throughput plant phenotyping, resulting in an increased focus on image-based plant phenotyping.
 To meet the world's growing demand, current crop productivity must be roughly doubled by 2050, due to global population growth that may exceed
 9 billion by 2050 and 11 billion by 2100. Over the past years, various HTP solutions have been developed to improve phenotyping capability
@@ -71,8 +71,12 @@ These in general can be divided into two categories: those encoder-decoder based
 The encoding phase uses CNNs to extract semantically meaningful feature maps from the input images, and the decoding phase uses transposed convolution for upsampling
 the extracted feature maps to labels. A detection-based framework is based on the CNN architecture for object detection. Several studies have explored the use of
 object detection models for instance segmentation, including concurrent detection and segmentation based on RCNN and DeepMask based on Faster RCNN.
+In the last years several new architecture are developed. In order to improve object recognition and segmentation, Deformable Convolutional NNs \cite{dai2017deformable} are developed.
+It is a combination about a different convolutional model and a new kind of RoI pooling. 2D convolution has two steps, sampling using a regular grid and sum the sampled
+values, instead, in the deformable convolution the regular grid is "deformed" by augmentation with offsets, by computing bilinear interpolation.
 
-\section{CNN Applied to Plant Phenotyping}
+
+\section{Application to Plant Phenotyping}
 \subsection{Plant Development}
 Morphological changes in plant shoots are critical in describing plant development. Canopy cover and leaf area are two commonly used parameters to quantify plant
 growth and development. In order to segment plants many studies used color-based features, but usually had imperfect segmentation because plant color could have large

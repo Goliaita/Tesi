@@ -45,30 +45,21 @@ def order_segmentation(segmented_array, index):
     array_in = np.delete(array_in, 0, axis=0)
 
     for i in range(2, len(segmented_array), 2):
-        counter = 100
-
+        counter = 10000
+        to_remove = -1
         for k in range(array_in.shape[0]-1):
-            try:
-                buff = np.linalg.norm([array_buff[i-2]-array_in[k,0],array_buff[i-1]-array_in[k,1]])
-            except Exception:
-                traceback.print_exc()
-                if mpi:
-                    print("error from rank: {} at {} and {} with array_in: {}, array_buff: {}".format(rank, k, i, array_in.shape, array_buff.shape))    
-                else:
-                    print("error at index: {}, with element {} and {} with array_in: {}, array_buff: {}"
-                        .format(index, k, i, array_in.shape, array_buff.shape))
-                    print(next)
-                sys.stdout.flush()
-                # exit()
-
+            buff = np.linalg.norm([array_buff[i-2]-array_in[k,0],array_buff[i-1]-array_in[k,1]])
             if counter > buff:
                 counter = buff
                 next = [array_in[k,0], array_in[k,1]]
                 to_remove = k
 
-        array_in = np.delete(array_in, to_remove, axis=0)
 
-        array_buff = np.append(array_buff, next)
+            
+        if to_remove >= 0 :
+            array_in = np.delete(array_in, to_remove, axis=0)
+
+            array_buff = np.append(array_buff, next)
 
 
     return array_buff
@@ -86,6 +77,8 @@ def coco_label_creator(label_path: str, ids=None, rank=0):
         total_images = 0
 
     l = 0
+    print("Starting the elaboration {}".format(rank))
+    sys.stdout.flush()
     for img_name in listed_images:
         img = plt.imread(label_path + img_name)
         colors = []
@@ -114,7 +107,8 @@ def coco_label_creator(label_path: str, ids=None, rank=0):
                                 
                         json_image = np.append(json_image, (l + (total_images * rank), i, j, color), axis=0)
 
-                except:
+                except Exception as e:
+                    print(e)
                     print("Error at image {}".format(img_name)) 
                     exit()
 
@@ -122,6 +116,7 @@ def coco_label_creator(label_path: str, ids=None, rank=0):
         if (l % 10) == 0:
             print("Rank: {}, Examinated {} files".format(rank, l))
             sys.stdout.flush()
+
         l += 1
 
     return json_image, image_colors
@@ -197,6 +192,10 @@ def compose_json(labels, colors, img_path, ids=None, rank=0):
 
     print("Added all images")
     sys.stdout.flush()
+    if rank == 0:
+        total = 1
+    else:
+        total = total_images*rank
 
     for i in range(rank*total_images, max_id):
         
@@ -223,8 +222,9 @@ def compose_json(labels, colors, img_path, ids=None, rank=0):
             hex_number ='#'+ hex_number[2:]
             try:
                 segmentation = order_segmentation(segmentation, i)
-            except:
-                print("Photo {}, at element {}".format(i, j))
+            except Exception as e:
+                print(e)
+                print("Error at Photo {}, at element {}".format(i, j))
                 exit()
 
             buff_json = {
@@ -242,9 +242,9 @@ def compose_json(labels, colors, img_path, ids=None, rank=0):
             id += 1
             composed_json["annotations"].append(buff_json)
 
-        if id % 10 == 0:
+        if (i - total) % 10 == 0:
             if ids is not None:
-                print("Rank: {}, has elaborated {} images of {}".format(rank, i, total_images))
+                print("Rank: {}, has elaborated {} images of {}".format(rank, i - total, total_images))
             else:
                 print("Process has elaborated {} picture at object {}".format(i, j))
         sys.stdout.flush()
@@ -252,26 +252,6 @@ def compose_json(labels, colors, img_path, ids=None, rank=0):
     return composed_json
 
 if __name__=="__main__":
-    print(args.path_label)
-    # divider_nt = "\\"
-    # divider_linux = "/"
-    # if os.name == "nt":
-    #     divider = divider_nt
-    #     try:
-    #         args.path_images = args.path_images.replace(divider_linux, divider_nt)
-    #         args.path_label = args.path_label.replace(divider_linux, divider_nt)
-    #         args.out_path = args.out_path.replace(divider_linux, divider_nt)
-            
-    #     except Exception as e:
-    #         print(e)
-    # else:
-    #     divider = divider_linux
-    #     try:
-    #         args.path_images = args.path_images.replace(divider_linux, divider_nt)
-    #         args.path_label = args.path_label.replace(divider_linux, divider_nt)
-    #         args.out_path = args.out_path.replace(divider_linux, divider_nt)
-    #     except Exception as e:
-    #         print(e)
 
     if mpi:
         world = MPI.COMM_WORLD
@@ -303,6 +283,8 @@ if __name__=="__main__":
         
         my_json = compose_json(label, colors, args.path_images, ids, rank)
 
+        print("Json composed writing out...")
+        sys.stdout.flush()
         all_json = world.gather(my_json, root=0)
 
         if rank == 0:
@@ -317,13 +299,11 @@ if __name__=="__main__":
                     result["images"] = np.append(result["images"], list_["images"][i])
                 for i in range(len(list_["annotations"])):
                     result["annotations"] = np.append(result["annotations"], list_["annotations"][i])
-
+                
             result["images"] = result["images"].tolist()
             result["categories"] = result["categories"].tolist()
             result["annotations"] = result["annotations"].tolist()
-            print("Json composed writing out...")
-
-            sys.stdout.flush()
+            
 
             coco_file = open(args.out_path + "/coco_labeled.json", "w+")
 
