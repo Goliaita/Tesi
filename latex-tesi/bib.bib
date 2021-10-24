@@ -11,6 +11,15 @@
 	keywords = {Mask R-CNN, Feature fusion, Manifold distance, Leaf segmentation, RGB-D camera},
 	abstract = {Effective segmentation of plant leaves is very necessary for non-contact extraction of plant leaf phenotype, especially leaf phenotype under environmental stress. However, the phenotype of leaves will change due to the influence of the environment, which increases the difficulty of detection. In this study, we proposed an accurate automatic segmentation method that combines Mask R-CNN with Density-Based Spatial Clustering of Applications with Noise (DBSCAN) clustering algorithm based on RGB-D camera to segment overlapped poplar seedling leaves under heavy metal stress. Firstly, an effective encoding method of depth information was used to facilitate the feature extraction of depth information. Next, we deployed Mask R-CNN to train the RGB-D data and fuse their features in the FPN structure to obtain more accurate leaf areas. Based on the detected leaf areas and depth data, DBSCAN based on manifold distance was then applied to segment a single leaves from overlapping leaves in the detected areas. Several analyses were performed to evaluate the performance of the proposed method, including the comparison of our network with classic Mask R-CNN and the comparison of DBSCAN based on manifold distance with other classic clustering methods. We used the pixel-wise Intersection over Union (p-IoU) to evaluate the detection results more accurately. In the experiments, the obtained p-IoU of normal and stressed leaves was 0.885 and 0.874, respectively, with corresponding mean accuracy values of 0.897 and 0.888. From our experimental results, it can be concluded that the proposed method can automatically detect leaves with high accuracy, which can be applied to 3-D leaf phenotype research and automatic plant de-leafing.}
 }
+
+@inproceedings{he2017mask,
+	title     = {Mask r-cnn},
+	author    = {He, Kaiming and Gkioxari, Georgia and Doll{\'a}r, Piotr and Girshick, Ross},
+	booktitle = {Proceedings of the IEEE international conference on computer vision},
+	pages     = {2961--2969},
+	year      = {2017}
+}
+
 @article{KOLHAR2021101373,
 	title    = {Convolutional neural network based encoder-decoder architectures for semantic segmentation of plants},
 	journal  = {Ecological Informatics},
@@ -45,58 +54,378 @@
 }
 
 @article{4152816,
-	author          = {Jiang Yu, Li Changying},
-	title           = {Convolutional Neural Networks for Image-Based High-Throughput Plant Phenotyping: A Review},
-	journal         = {Plant Phenomics},
-	volume          = {2020},
-	doi             = {https://doi.org/10.34133/2020/4152816},
-	year            = {2020}
+	author  = {Jiang Yu, Li Changying},
+	title   = {Convolutional Neural Networks for Image-Based High-Throughput Plant Phenotyping: A Review},
+	journal = {Plant Phenomics},
+	volume  = {2020},
+	doi     = {https://doi.org/10.34133/2020/4152816},
+	year    = {2020}
 }
 
 @misc{dai2017deformable,
-      title={Deformable Convolutional Networks}, 
-      author={Jifeng Dai and Haozhi Qi and Yuwen Xiong and Yi Li and Guodong Zhang and Han Hu and Yichen Wei},
-      year={2017},
-      eprint={1703.06211},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
+	title         = {Deformable Convolutional Networks},
+	author        = {Jifeng Dai and Haozhi Qi and Yuwen Xiong and Yi Li and Guodong Zhang and Han Hu and Yichen Wei},
+	year          = {2017},
+	eprint        = {1703.06211},
+	archiveprefix = {arXiv},
+	primaryclass  = {cs.CV}
 }
 
-@Article{s18051580,
-AUTHOR = {Teimouri, Nima and Dyrmann, Mads and Nielsen, Per Rydahl and Mathiassen, Solvejg Kopp and Somerville, Gayle J. and Jørgensen, Rasmus Nyholm},
-TITLE = {Weed Growth Stage Estimator Using Deep Convolutional Neural Networks},
-JOURNAL = {Sensors},
-VOLUME = {18},
-YEAR = {2018},
-NUMBER = {5},
-ARTICLE-NUMBER = {1580},
-URL = {https://www.mdpi.com/1424-8220/18/5/1580},
-ISSN = {1424-8220},
-ABSTRACT = {This study outlines a new method of automatically estimating weed species and growth stages (from cotyledon until eight leaves are visible) of in situ images covering 18 weed species or families. Images of weeds growing within a variety of crops were gathered across variable environmental conditions with regards to soil types, resolution and light settings. Then, 9649 of these images were used for training the computer, which automatically divided the weeds into nine growth classes. The performance of this proposed convolutional neural network approach was evaluated on a further set of 2516 images, which also varied in term of crop, soil type, image resolution and light conditions. The overall performance of this approach achieved a maximum accuracy of 78% for identifying Polygonum spp. and a minimum accuracy of 46% for blackgrass. In addition, it achieved an average 70% accuracy rate in estimating the number of leaves and 96% accuracy when accepting a deviation of two leaves. These results show that this new method of using deep convolutional neural networks has a relatively high ability to estimate early growth stages across a wide variety of weed species.},
-DOI = {10.3390/s18051580}
+@article{s18051580,
+	author         = {Teimouri, Nima and Dyrmann, Mads and Nielsen, Per Rydahl and Mathiassen, Solvejg Kopp and Somerville, Gayle J. and Jørgensen, Rasmus Nyholm},
+	title          = {Weed Growth Stage Estimator Using Deep Convolutional Neural Networks},
+	journal        = {Sensors},
+	volume         = {18},
+	year           = {2018},
+	number         = {5},
+	article-number = {1580},
+	url            = {https://www.mdpi.com/1424-8220/18/5/1580},
+	issn           = {1424-8220},
+	abstract       = {This study outlines a new method of automatically estimating weed species and growth stages (from cotyledon until eight leaves are visible) of in situ images covering 18 weed species or families. Images of weeds growing within a variety of crops were gathered across variable environmental conditions with regards to soil types, resolution and light settings. Then, 9649 of these images were used for training the computer, which automatically divided the weeds into nine growth classes. The performance of this proposed convolutional neural network approach was evaluated on a further set of 2516 images, which also varied in term of crop, soil type, image resolution and light conditions. The overall performance of this approach achieved a maximum accuracy of 78% for identifying Polygonum spp. and a minimum accuracy of 46% for blackgrass. In addition, it achieved an average 70% accuracy rate in estimating the number of leaves and 96% accuracy when accepting a deviation of two leaves. These results show that this new method of using deep convolutional neural networks has a relatively high ability to estimate early growth stages across a wide variety of weed species.},
+	doi            = {10.3390/s18051580}
 }
 
+@article{chaudhurystudy,
+	title   = {Study on Deep Convolutional Neural Networks for Leaf Counting⋆},
+	author  = {Chaudhury, Bharathi and Joshi, Vasudha and Anand, SS and Mitra, Pabitra},
+	year    = {},
+	journal = {}
+}
 
-@Article{chaudhurystudy,
-  title={Study on Deep Convolutional Neural Networks for Leaf Counting⋆},
-  author={Chaudhury, Bharathi and Joshi, Vasudha and Anand, SS and Mitra, Pabitra},
-  year={},
-  journal={}
+@inproceedings{yi2016lift,
+	title        = {Lift: Learned invariant feature transform},
+	author       = {Yi, Kwang Moo and Trulls, Eduard and Lepetit, Vincent and Fua, Pascal},
+	booktitle    = {European conference on computer vision},
+	pages        = {467--483},
+	year         = {2016},
+	organization = {Springer}
+}
+
+@inproceedings{he2016deep,
+	title     = {Deep residual learning for image recognition},
+	author    = {He, Kaiming and Zhang, Xiangyu and Ren, Shaoqing and Sun, Jian},
+	booktitle = {Proceedings of the IEEE conference on computer vision and pattern recognition},
+	pages     = {770--778},
+	year      = {2016}
+}
+
+@inproceedings{garcia2016pointnet,
+	title        = {Pointnet: A 3d convolutional neural network for real-time object class recognition},
+	author       = {Garcia-Garcia, Alberto and Gomez-Donoso, Francisco and Garcia-Rodriguez, Jose and Orts-Escolano, Sergio and Cazorla, Miguel and Azorin-Lopez, J},
+	booktitle    = {2016 International joint conference on neural networks (IJCNN)},
+	pages        = {1578--1584},
+	year         = {2016},
+	organization = {IEEE}
 }
 
 @inproceedings{srivastava2017drought,
-  title={Drought stress classification using 3D plant models},
-  author={Srivastava, Siddharth and Bhugra, Swati and Lall, Brejesh and Chaudhury, Santanu},
-  booktitle={Proceedings of the IEEE International Conference on Computer Vision Workshops},
-  pages={2046--2054},
-  year={2017}
+	title     = {Drought stress classification using 3D plant models},
+	author    = {Srivastava, Siddharth and Bhugra, Swati and Lall, Brejesh and Chaudhury, Santanu},
+	booktitle = {Proceedings of the IEEE International Conference on Computer Vision Workshops},
+	pages     = {2046--2054},
+	year      = {2017}
 }
 
-@unknown{Multi-task,
-author = {Pound, Michael and Atkinson, Jonathan and Wells, Darren and Pridmore, Tony and French, Andrew},
-year = {2017},
-month = {10},
-pages = {},
-title = {Deep Learning for Multi-task Plant Phenotyping},
-doi = {10.1101/204552}
+@unknown{multitask,
+	author = {Pound, Michael and Atkinson, Jonathan and Wells, Darren and Pridmore, Tony and French, Andrew},
+	year   = {2017},
+	month  = {10},
+	pages  = {},
+	title  = {Deep Learning for Multi-task Plant Phenotyping},
+	doi    = {10.1101/204552}
 }
+
+@inproceedings{9150887,
+	author    = {Lyu, Beichen and Smith, Stuart D. and Cherkauer, Keith A.},
+	booktitle = {2020 IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW)},
+	title     = {Fine-Grained Recognition in High-throughput Phenotyping},
+	year      = {2020},
+	volume    = {},
+	number    = {},
+	pages     = {320-329},
+	abstract  = {Fine-Grained Recognition aims to classify sub-category objects such as bird species and car models from imagery. In High-throughput Phenotyping, the required task is to classify individual plant cultivars to assist plant breeding, which has posed three challenges: 1) it is easy to overfit complex features and models, 2) visual conditions change during and between image collection opportunities, and 3) analysis of thousands of cultivars require high-throughput data collection and analysis. To tackle these challenges, we propose a simple but intuitive descriptor, Radial Object Descriptor, to represent plant cultivar objects based on contour. This descriptor is invariant under scaling, rotation, and translation, as well as robust under changes to the plant's growth stage and camera's view angle. Furthermore, we complement this mid-level feature by fusing it with the low-level features (Histogram of Oriented Gradients) and deep features (ResNet-18), respectively. We extensively test our fusion approaches using two real world experiments. One experiment is on a novel benchmark dataset (HTP-Soy) in which we collect ~ 2, 000 high-resolution aerial images of outdoor soybean plots. Another experiment is on three datasets of indoor rosette plants. For both experiments, our fusion approaches achieve superior accuracies while maintaining better generalization as compared with traditional approaches.},
+	keywords  = {},
+	doi       = {10.1109/CVPRW50498.2020.00044},
+	issn      = {2160-7516},
+	month     = {June}
+}
+
+@article{lu2017tasselnet,
+	title     = {TasselNet: counting maize tassels in the wild via local counts regression network},
+	author    = {Lu, Hao and Cao, Zhiguo and Xiao, Yang and Zhuang, Bohan and Shen, Chunhua},
+	journal   = {Plant methods},
+	volume    = {13},
+	number    = {1},
+	pages     = {1--17},
+	year      = {2017},
+	publisher = {BioMed Central}
+}
+
+@incollection{snavely2006photo,
+	title     = {Photo tourism: exploring photo collections in 3D},
+	author    = {Snavely, Noah and Seitz, Steven M and Szeliski, Richard},
+	booktitle = {ACM siggraph 2006 papers},
+	pages     = {835--846},
+	year      = {2006}
+}
+
+@inproceedings{ronneberger2015u,
+	title        = {U-net: Convolutional networks for biomedical image segmentation},
+	author       = {Ronneberger, Olaf and Fischer, Philipp and Brox, Thomas},
+	booktitle    = {International Conference on Medical image computing and computer-assisted intervention},
+	pages        = {234--241},
+	year         = {2015},
+	organization = {Springer}
+}
+
+@inproceedings{lowe1999object,
+	title        = {Object recognition from local scale-invariant features},
+	author       = {Lowe, David G},
+	booktitle    = {Proceedings of the seventh IEEE international conference on computer vision},
+	volume       = {2},
+	pages        = {1150--1157},
+	year         = {1999},
+	organization = {Ieee}
+}
+
+@inproceedings{lin2017feature,
+	title     = {Feature pyramid networks for object detection},
+	author    = {Lin, Tsung-Yi and Doll{\'a}r, Piotr and Girshick, Ross and He, Kaiming and Hariharan, Bharath and Belongie, Serge},
+	booktitle = {Proceedings of the IEEE conference on computer vision and pattern recognition},
+	pages     = {2117--2125},
+	year      = {2017}
+}
+
+@article{badrinarayanan2017segnet,
+	title     = {Segnet: A deep convolutional encoder-decoder architecture for image segmentation},
+	author    = {Badrinarayanan, Vijay and Kendall, Alex and Cipolla, Roberto},
+	journal   = {IEEE transactions on pattern analysis and machine intelligence},
+	volume    = {39},
+	number    = {12},
+	pages     = {2481--2495},
+	year      = {2017},
+	publisher = {IEEE}
+}
+
+@article{simonyan2014very,
+	title   = {Very deep convolutional networks for large-scale image recognition},
+	author  = {Simonyan, Karen and Zisserman, Andrew},
+	journal = {arXiv preprint arXiv:1409.1556},
+	year    = {2014}
+}
+
+@incollection{fukushima1982neocognitron,
+	title     = {Neocognitron: A self-organizing neural network model for a mechanism of visual pattern recognition},
+	author    = {Fukushima, Kunihiko and Miyake, Sei},
+	booktitle = {Competition and cooperation in neural nets},
+	pages     = {267--285},
+	year      = {1982},
+	publisher = {Springer}
+}
+
+@article{zoph2016neural,
+	title   = {Neural architecture search with reinforcement learning},
+	author  = {Zoph, Barret and Le, Quoc V},
+	journal = {arXiv preprint arXiv:1611.01578},
+	year    = {2016}
+}
+
+@article{sermanet2013overfeat,
+	title   = {Overfeat: Integrated recognition, localization and detection using convolutional networks},
+	author  = {Sermanet, Pierre and Eigen, David and Zhang, Xiang and Mathieu, Micha{\"e}l and Fergus, Rob and LeCun, Yann},
+	journal = {arXiv preprint arXiv:1312.6229},
+	year    = {2013}
+}
+
+@inproceedings{mardanisamani2019crop,
+	title     = {Crop lodging prediction from UAV-acquired images of wheat and canola using a DCNN augmented with handcrafted texture features},
+	author    = {Mardanisamani, Sara and Maleki, Farhad and Hosseinzadeh Kassani, Sara and Rajapaksa, Sajith and Duddu, Hema and Wang, Menglu and Shirtliffe, Steve and Ryu, Seungbum and Josuttes, Anique and Zhang, Ti and others},
+	booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops},
+	pages     = {0--0},
+	year      = {2019}
+}
+
+@article{nazki2020unsupervised,
+	title     = {Unsupervised image translation using adversarial networks for improved plant disease recognition},
+	author    = {Nazki, Haseeb and Yoon, Sook and Fuentes, Alvaro and Park, Dong Sun},
+	journal   = {Computers and Electronics in Agriculture},
+	volume    = {168},
+	pages     = {105117},
+	year      = {2020},
+	publisher = {Elsevier}
+}
+
+@inproceedings{Uchiyama_2017_ICCV_Workshops,
+	author    = {Uchiyama, Hideaki and Sakurai, Shunsuke and Mishima, Masashi and Arita, Daisaku and Okayasu, Takashi and Shimada, Atsushi and Taniguchi, Rin-ichiro},
+	title     = {An Easy-To-Setup 3D Phenotyping Platform for KOMATSUNA Dataset},
+	booktitle = {Proceedings of the IEEE International Conference on Computer Vision (ICCV) Workshops},
+	month     = {Oct},
+	year      = {2017}
+}
+
+@article{cruz2016multi,
+	title     = {Multi-modality imagery database for plant phenotyping},
+	author    = {Cruz, Jeffrey A and Yin, Xi and Liu, Xiaoming and Imran, Saif M and Morris, Daniel D and Kramer, David M and Chen, Jin},
+	journal   = {Machine Vision and Applications},
+	volume    = {27},
+	number    = {5},
+	pages     = {735--749},
+	year      = {2016},
+	publisher = {Springer}
+}
+
+@article{MINERVINI201680,
+	title    = {Finely-grained annotated datasets for image-based plant phenotyping},
+	journal  = {Pattern Recognition Letters},
+	volume   = {81},
+	pages    = {80-89},
+	year     = {2016},
+	issn     = {0167-8655},
+	doi      = {https://doi.org/10.1016/j.patrec.2015.10.013},
+	url      = {https://www.sciencedirect.com/science/article/pii/S0167865515003645},
+	author   = {Massimo Minervini and Andreas Fischbach and Hanno Scharr and Sotirios A. Tsaftaris},
+	keywords = {Image processing, Machine vision and scene understanding, Plant biology, Annotated datasets},
+	abstract = {Image-based approaches to plant phenotyping are gaining momentum providing fertile ground for several interesting vision tasks where fine-grained categorization is necessary, such as leaf segmentation among a variety of cultivars, and cultivar (or mutant) identification. However, benchmark data focusing on typical imaging situations and vision tasks are still lacking, making it difficult to compare existing methodologies. This paper describes a collection of benchmark datasets of raw and annotated top-view color images of rosette plants. We briefly describe plant material, imaging setup and procedures for different experiments: one with various cultivars of Arabidopsis and one with tobacco undergoing different treatments. We proceed to define a set of computer vision and classification tasks and provide accompanying datasets and annotations based on our raw data. We describe the annotation process performed by experts and discuss appropriate evaluation criteria. We also offer exemplary use cases and results on some tasks obtained with parts of these data. We hope with the release of this rigorous dataset collection to invigorate the development of algorithms in the context of plant phenotyping but also provide new interesting datasets for the general computer vision community to experiment on. Data are publicly available at http://www.plant-phenotyping.org/datasets.}
+}
+
+@article{goodfellow2014generative,
+	title   = {Generative adversarial nets},
+	author  = {Goodfellow, Ian and Pouget-Abadie, Jean and Mirza, Mehdi and Xu, Bing and Warde-Farley, David and Ozair, Sherjil and Courville, Aaron and Bengio, Yoshua},
+	journal = {Advances in neural information processing systems},
+	volume  = {27},
+	year    = {2014}
+}
+
+@article{ren2015faster,
+	title   = {Faster r-cnn: Towards real-time object detection with region proposal networks},
+	author  = {Ren, Shaoqing and He, Kaiming and Girshick, Ross and Sun, Jian},
+	journal = {Advances in neural information processing systems},
+	volume  = {28},
+	pages   = {91--99},
+	year    = {2015}
+}
+
+@inproceedings{girshick2014rich,
+	title     = {Rich feature hierarchies for accurate object detection and semantic segmentation},
+	author    = {Girshick, Ross and Donahue, Jeff and Darrell, Trevor and Malik, Jitendra},
+	booktitle = {Proceedings of the IEEE conference on computer vision and pattern recognition},
+	pages     = {580--587},
+	year      = {2014}
+}
+
+@inproceedings{szegedy2016rethinking,
+	title     = {Rethinking the inception architecture for computer vision},
+	author    = {Szegedy, Christian and Vanhoucke, Vincent and Ioffe, Sergey and Shlens, Jon and Wojna, Zbigniew},
+	booktitle = {Proceedings of the IEEE conference on computer vision and pattern recognition},
+	pages     = {2818--2826},
+	year      = {2016}
+}
+
+@inproceedings{szegedy2015going,
+	title     = {Going deeper with convolutions},
+	author    = {Szegedy, Christian and Liu, Wei and Jia, Yangqing and Sermanet, Pierre and Reed, Scott and Anguelov, Dragomir and Erhan, Dumitru and Vanhoucke, Vincent and Rabinovich, Andrew},
+	booktitle = {Proceedings of the IEEE conference on computer vision and pattern recognition},
+	pages     = {1--9},
+	year      = {2015}
+}
+
+@article{comaniciu2002mean,
+	title     = {Mean shift: A robust approach toward feature space analysis},
+	author    = {Comaniciu, Dorin and Meer, Peter},
+	journal   = {IEEE Transactions on pattern analysis and machine intelligence},
+	volume    = {24},
+	number    = {5},
+	pages     = {603--619},
+	year      = {2002},
+	publisher = {IEEE}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

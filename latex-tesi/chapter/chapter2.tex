@@ -23,7 +23,7 @@ improving existing ones through conventional image/signal processing, machine le
 based approaches have generally improved generalizability, but most still cannot meet the requirements for current phenotypic purposes.
 Deep learning is a subset of machine learning and enables hierarchical learning of data. The key benefit is that features will be learned
 automatically from the input data, thus breaking down barriers to developing intelligent solutions for different of applications.
-A commonly used DL architecture is deep convolutional neural networks(CNNs), that were developed for image classification and eventually
+A commonly used DL architecture is deep convolutional neural networks(CNNs)\cite{fukushima1982neocognitron}, that were developed for image classification and eventually
 demonstrated better performance than humans on the same dataset.
 
 \section{Convolutional Neural Networks}
@@ -39,7 +39,7 @@ The development of modern CNNs for image classification can be grouped into thre
 \end{itemize}
 After these improvements, representative CNNs can now usually outperform humans in image classification for various datasets. It should be noted that the performance
 improvement following the change in CNN architecture was highly dependent on human expertise and tuning efforts, which means that improving the CNN architecture
-could be as laborious as feature engineering in traditional ML. A reinforcement learning framework was introduced to search for optimal convolutional cells on a small
+could be as laborious as feature engineering in traditional ML. A reinforcement learning framework\cite{zoph2016neural} was introduced to search for optimal convolutional cells on a small
 annotated dataset, and the resulting cells were stacked in different ways and transferred to an unknown large dataset. In addition to performance improvement, studies
 have been conducted to understand the mechanism of CNNs. This leads to the development of techniques towards explainable artificial intelligence that helps in developing
 interpretable and inclusive machine learning models. The study also showed that learned features could be generalized to various classifiers, suggesting that CNNs could
@@ -51,10 +51,10 @@ class activation mapping, and layered relevance propagation.
 \subsection{Object Detection}
 Object detection attempts to detect and classify all potential objects in a given image. The use of CNNs for object detection can be categorized into two groups:
 one-stage and two-stage CNN architecture. Two-stage models first detect candidate object regions and then classify the candidate regions into different object categories.
-The OverFeat framework was developed to use a single CNN to extract features for training classifiers and regressors separately. The trained classifiers and regressors
+The OverFeat framework was developed to use a single CNN to extract features for training classifiers and regressors separately\cite{sermanet2013overfeat}. The trained classifiers and regressors
 were used to predict class labels and bounding box coordinates, respectively, for candidate region of interest generated using a sliding window method.
 
-Three key techniques in the CNN architecture of the RCNN family were identified, including the region proposal network, the region-of-interest pooling operation, and
+Three key techniques in the CNN architecture of the RCNN family\cite{girshick2014rich} were identified, including the region proposal network, the region-of-interest pooling operation, and
 the multitask loss function. A RPN was developed to generate ROIs of candidate objects using features extracted from CNNs, which simultaneously saved processing time
 and increased the accuracy of the region proposal. A ROI pooling operation was developed to extract a fixed number of features from ROIs of various sizes, thus avoiding
 repeated computation of features for different ROIs. A multitask loss function was used to unify the training process, which allowed for a training process for object
@@ -65,15 +65,21 @@ discovered for these one-stage models: an extreme imbalance in the number of obj
 providing little contribution to the model training process. However, if detection accuracy is the most important factor to consider, two-stage models would be
 the option; otherwise, single-stage models provide better computational efficiency for embedded systems and real-time applications.
 
+
+
 \subsection{Image Segmentation}
 Semantic segmentation seeks to provide masks for objects with the same semantic meaning, while instance segmentation seeks to provide individual objects in a given image.
 These in general can be divided into two categories: those encoder-decoder based, and those based on detection. The encoder-decoder-based is divided into two phases.
 The encoding phase uses CNNs to extract semantically meaningful feature maps from the input images, and the decoding phase uses transposed convolution for upsampling
 the extracted feature maps to labels. A detection-based framework is based on the CNN architecture for object detection. Several studies have explored the use of
-object detection models for instance segmentation, including concurrent detection and segmentation based on RCNN and DeepMask based on Faster RCNN.
+object detection models for instance segmentation, including concurrent detection and segmentation based on RCNN and DeepMask based on Faster RCNN\cite{ren2015faster}.
 In the last years several new architecture are developed. In order to improve object recognition and segmentation, Deformable Convolutional NNs \cite{dai2017deformable} are developed.
 It is a combination about a different convolutional model and a new kind of RoI pooling. 2D convolution has two steps, sampling using a regular grid and sum the sampled
 values, instead, in the deformable convolution the regular grid is "deformed" by augmentation with offsets, by computing bilinear interpolation.
+
+
+
+
 
 
 \section{Application to Plant Phenotyping}
@@ -89,14 +95,14 @@ state of plants at individual growth stages, and RNNs were used to incorporate a
 plant growth patterns could be fully encoded by neural networks to reveal differences between cultivars and treatment groups. This indirect phenotyping scheme
 could be particularly useful for selection-oriented programs, but explaining selection would be a significant challenge and barrier to many research studies that
 aim to understand the mechanism of many plant responses. In addition to morphological measurements, CNNs could be used to monitor some plant development events
-such as plant lodging. A new CNN architecture (LodgeNet) was developed by integrating a custom 7-layer CNN model with handcrafted features. Compared with
-10 well-established CNN architectures, LodgeNet provided comparable or better performance on differentiation between allurement and regular plots, but with a
+such as plant lodging. A new CNN architecture (LodgedNet)\cite{mardanisamani2019crop} was developed by integrating a custom 7-layer CNN model with handcrafted features. Compared with
+10 well-established CNN architectures, LodgedNet provided comparable or better performance on differentiation between allurement and regular plots, but with a
 significant improvement in processing speed.
 
 An application about this field is inside the research about Weed Growth Estimator\cite{s18051580}. In this research, a CNN was used to count the number of leaves on 18 different weed species or families. However, deep CNNs need to be trained on a large number of images
 to learn how to automatically extract general features from the input data. Overfitting makes it difficult for the network to generalize to new examples that were not in
 the training set. In addition, the training dataset was augmented by using horizontal tilt, rotation, zoom, width shift, height shift, and Gaussian smoothing filters. The
-authors selected the Inception-v3 architecture, which is a refinement of the GoogLeNet architecture. The Inception-v3 architecture was chosen because of its good
+authors selected the Inception-v3\cite{szegedy2016rethinking} architecture, which is a refinement of the GoogLeNet\cite{szegedy2015going} architecture. The Inception-v3 architecture was chosen because of its good
 performance, ease of implementation, and relatively low computational cost, which yielded excellent results. This network with their dataset was trained for 20 epochs
 and the predictions from the 20 models were combined to increase the confidence in the predictions. Because the 20 models were not identical, they could predict different
 growth stages for the same plants. Predictions of the growth stage of the same plant by different models were more different when more plants were present in an image,
@@ -117,7 +123,7 @@ and create an automatic generation of leaf patterns for incorporating leaf shape
 They present a novel segmentation of the leaf instance with a top-down view of plant images in high-throughput phenotyping platforms.
 The acquired images suffer from uneven illumination, moss, and shadows. To address the problem of scene variability, a statistical
 image segmentation algorithm Mean-shift Bandwidths Searching Latent Dirichlet Allocation is employed. In order to find the optimal
-MeanShift bandwidth for stable segmentation, the authors used LUV distances between topics. However, the color of moss is very similar
+MeanShift\cite{comaniciu2002mean} bandwidth for stable segmentation, the authors used LUV distances between topics. However, the color of moss is very similar
 to plant leaves, so using LUV distance is not suitable for the studied images. To solve this problem, the authors employed the distance between
 texture descriptors.
 Plant leaves spread out from the center showing different orientations, so finding candidate regions to leaves will require examining different
@@ -146,6 +152,7 @@ optimal set of leaf candidates based on an objective function with three terms:
     \item the distance of the synthesized mask from the selected leaves and the target image mask is selected and that when disposed generates the target mask accurately.
 \end{itemize}
 
+
 Overall, they observed that the output of the Gaussian mixture model appears noisy, while K-means, Otsu's threshold based on excess green features,
 and Minervini's algorithm excessively segment the foreground resulting in a disconnected vegetation region. On the other hand, significant agreement
 with ground truth can be observed for the modified MSBS-LDA algorithm using texture-based distance metrics. One approach was based on the orientation
@@ -159,6 +166,34 @@ multi-leaf pattern matching was not frequently used because the generated leaf c
 non-overlapping scenarios observed in these images. However, it also led to the neglect of leaves that were highly. The comparative study demonstrates the
 efficiency of their proposed structure in relation to different plant species. The strategy to extract non-occluded leaves involves the automatic generation
 of shape priors, which can be further used to segment individual leaves into overlapping regions in the image.
+
+
+In High-throughput Phenotyping, the required task is to classify individual plant cultivars to assist plant breeding\cite{9150887}.
+In this paper, the authors pre-process the images with object localization directly based on prior knowledge such as sensor fusion and experiment setup,
+object segmentation using green-based brightness thresholds or Otsu threshold, and finally contour extraction as an array of contour pixel coordinates.
+Then the authors unfold the 2-dimensional contour into a 1-dimensional radial object descriptor, which indicates the shortest distance from each pixel to the seed.
+Then the authors post-process these results, where they normalize the values in ROD in a range of [0,1] and scale them from different lengths into a fixed
+by sampling or interpolation. To complete the ROD feature they merge them with another low-level local feature descriptor, the histogram of oriented gradients,
+which have local gradients at different orientations, which is powerful for differentiating objects with meaningful texture patterns. The histograms of neighboring
+cells are further grouped into block groups with an overlap ratio to enhance local contrast. Another way the authors used to integrate ROD is ResNet-18\cite{he2016deep} which is a
+type of CNN with residual parts to skip layers so that higher accuracy can be efficiently achieved by using deeper layers. It is the representative of deep feature
+extraction methods because its performance has been demonstrated in plant research. To classify and calculate the loss function, the authors used Softmax regression,
+and learned the set of weight parameters by minimizing the loss function. The first experiment involves soybean plots grown in the field using UAS imagery, where we
+highlight the robustness of their approach under changing camera angle of view. The second experiment involves rosette plants in the greenhouse using a fixed camera,
+where they highlighted the robustness of their approach under sus change in growth phase. They evaluated the robustness of ROD and its fusion with HOG and ResNet in
+Softmax using seven different approaches. The first two approaches, CNN and ResNet-18, are based on CNN, Each convolution layer is followed by a batch normalization
+layer, a ReLu layer, and a max pooling layer. For both CNN and ResNet-18, they manually tuned the mini-batch size and learning rate based on each validation dataset
+before finalizing its classification result. By combining all these layers, they obtained five models, which will be trained using the Scaled Conjugate Gradient method.
+Using the HTP-Soy dataset, the authors found that ROD-ResNet-Softmax achieves the highest validation mA of 0.947 while ROD-HOG-Softmax achieves the highest test mA
+of 0.866, which slightly exceeds ROD-ResNet-Softmax. ROD-Softmax significantly outperforms Fourier-Softmax, which indicates the advantage of ROD over Fourier as a
+contour-based mid-level descriptor. It is even surprising to see that ROD-Softmax achieves mA comparable to HOG-Softmax even though HOG contains much richer information.
+ROD-HOG-Softmax outperforms ResNet-18 in inference of soybean plots for most pairs of growth stages. The advantage of ROD-HOG-Softmax becomes more apparent during the
+later growth stages, where the soybean canopy grows faster and its contour becomes more discriminating. In contrast, in Arabidopsis, Bean, and Komatsuna, the authors
+found that ROD-ResNet-Softmax outperforms almost all other approaches in terms of both validation mA and test mA. ROD-Softmax significantly outperforms Fourier-Softmax
+and achieves classification accuracy comparable to HOG-Softmax.
+
+
+
 
 \subsection{Plant Stress Phenotyping}
 Plant stress phenotyping aims to identify and evaluate plant responses to abiotic and biotic stresses, providing information for selection of accession lines
@@ -180,14 +215,14 @@ Although some studies have adopted deconvolution layers to visualize activated p
 used to compare with human evaluation or correlate with biological knowledge. Compared with the first phase studies, the two pioneering studies demonstrated the importance of
 understanding the mechanism of CNNs for stress phenotyping, as well as the potential for quantifying stress severity. Image annotation is still recognized as a limiting factor
 for the use of many DL algorithms, so the researchers investigated the use of generative adversarial networks to generate synthetic images for training CNN models for
-plant stress detection and classification. A very recent study explored the use of a custom CNN architecture to detect plant diseases in hyperspectral images.
+plant stress detection and classification\cite{nazki2020unsupervised}. A very recent study explored the use of a custom CNN architecture to detect plant diseases in hyperspectral images.
 The novelty of the custom architecture is the use of a 3D convolution operation that can directly convolve spatial and spectral information into hypercubes.
 This would not only inspire future studies related to plant stresses, but also allow the reanalysis of many previous hyperspectral images collected for plant
 stress analysis. With improved detection accuracy, subtle differences in stress between cultivars/treatments can be revealed to improve their understanding of plant
 responses to stresses.
 
-An example about drought stress classification is \cite{srivastava2017drought}, where the authors modify the standard SfM pipeline as proposed in to use learned keypoints and descriptors based on deep networks. They employed Learned Invariant Feature
-Transform (LIFT) for keypoint detector and descriptor learning instead of Scale-Invariant Feature Transform. The key points in LIFT correspond to distinctive regions,
+An example about drought stress classification is \cite{srivastava2017drought}, where the authors modify the standard SfM pipeline\cite{snavely2006photo} as proposed in to use learned keypoints and descriptors based on deep networks. They employed Learned Invariant Feature
+Transform (LIFT)\cite{yi2016lift} for keypoint detector and descriptor learning instead of Scale-Invariant Feature Transform\cite{lowe1999object}. The key points in LIFT correspond to distinctive regions,
 where the conditions that define distinctiveness are learned with a Siamese deep network on the dataset for the target domain. Thus, the authors selected LIFT for its
 ability to learn key points and the corresponding descriptor based on the specific characteristics of the dataset. Learning descriptors and patch detectors based on deep
 networks requires training the detector-describer with specific examples. This allows the network to adapt to the complexities of plant structure, especially curvature
@@ -208,8 +243,8 @@ phenotypic traits involving structural changes. For the second, there are two ty
 \item PointNet.
 \end{itemize}
 
-Due to the inherent nature of the convolution operation, 3D-CNNs work on structured data, i.e., voxelised clouds. However, PointNet is a recent architecture that works
-directly on unstructured 3D PoCloud data. The voxelization of the point cloud introduces an approximation to the model as it is essentially a quantization process. PointNet
+Due to the inherent nature of the convolution operation, 3D-CNNs work on structured data, i.e., voxelised clouds. However, PointNet\cite{garcia2016pointnet} works
+directly on unstructured 3D PointCloud data. The voxelization of the point cloud introduces an approximation to the model as it is essentially a quantization process. PointNet
 generates a global feature on the point cloud point cloud. This is done by learning a permutation invariant representation of points from the input point cloud that is
 encoded into a vector using a symmetric function.  However, by design, the global feature produced by PointNet does not capture local geometric information. They observed
 that this is the reason for the relatively poor performance of PointNet global features trained on traditional objects. To overcome this limitation, the authors aggregates the
@@ -223,7 +258,7 @@ codebook from Fisher Vector is small, they use a linear classifier, Support Vect
 computational complexity while maintaining robustness. For PointNet, they report results on both the pre-trained model and after tuning PointNet with 3D Point Cloud
 models from the training dataset. The fine-tuning is performed by initializing the weights from the pre-trained PointNet for object classification and then continuing
 the training process with the 3D point cloud of the wheat plants. The reconstruction of such fine details can be attributed to the quality of matches on the leaf surfaces
-from the key points and descriptors learned for 3D reconstruction. . Accuracy is calculated as the percentage of the number of correct classifications over the total
+from the key points and descriptors learned for 3D reconstruction. Accuracy is calculated as the percentage of the number of correct classifications over the total
 number of test inputs for the respective drought and health classes. However, it is interesting to note that PointNet pre-trained on rigid objects performs poorly against
 all compared descriptors. This could be due to two reasons: the default architecture of PointNet is not easily generalized, and plants have a smooth, textureless surface
 and are usually heavily occluded, which is not usually found in rigid bodies. In addition, RoPS outperforms all other local descriptors followed by SHOT (FV). It can
@@ -231,8 +266,8 @@ be seen that descriptors quantified with Fisher Vector consistently perform bett
 This shows that as with 2D descriptors, Fisher Vector is able to encode a more discriminative representation of local descriptors than compared to compared to BoVW.
 Therefore, in aggregating features in fine-tuned PointNet, Fisher Vector was used as a feature quantization technique.
 
-The segmentation networks used in this paper can be used for other plant related applications such as plant trait estimation or in quantification of plant stress.
-In \cite{KOLHAR2021101373} the authors have used, SegNet models based on CNN, U-Net and residual U-Net are used for semantic segmentation of plant images. For data images are involved
+Segmentation networks can be used for plant related applications such as plant trait estimation or in quantification of plant stress.
+Shrikrishna Kolhar and Jayant Jagtap\cite{KOLHAR2021101373} have used, SegNet\cite{badrinarayanan2017segnet} models based on CNN, U-Net\cite{ronneberger2015u} and residual U-Net are used for semantic segmentation of plant images. For data images are involved
 with scaling, normalization and data augmentation. image pixel values are normalized between 0 and 1 by dividing each pixel with 255. Normalization ensures that each pixel
 has a similar distribution which helps fast convergence in the process of training deep neural networks. SegNet is an encoder-decoder type model with 13 convolutional
 layers in the encoder/contraction and decoder/expansion part. Two fully connected layers are used between the encoding and decoding networks, as shown in. Each encoder
@@ -274,10 +309,10 @@ better results than SegNet and comparable results to U-Net.
 
 
 Effective segmentation of plant leaves is very necessary for non-contact extraction of plant leaf phenotype, especially leaf phenotype under environmental stress.
-Inside \cite{LIU2020105753} paper proposed a combination of deep learning and point cloud clustering methods to detect individual leaves. Point cloud processing algorithms are very time
-consuming. By combining the point cloud processing algorithm with deep learning, the proposed method clusters only the point clouds in the area detected by Mask R-CNN,
+Xuan Liu, Chunhua Hu and Pingping Li\cite{LIU2020105753} proposed a combination of deep learning and point cloud clustering methods to detect individual leaves. Point cloud processing algorithms are very time
+consuming. By combining the point cloud processing algorithm with deep learning, the proposed method clusters only the point clouds in the area detected by Mask R-CNN\cite{he2017mask},
 which greatly reduces the processing time. The depth information is important to improve the detection accuracy, and can provide complementary information to the color
-image and can help separate overlapping leaves. In Their study the authors introduced the feature mapping approach to fuse the features of color and depth data into the FPN
+image and can help separate overlapping leaves. In Their study the authors introduced the feature mapping approach to fuse the features of color and depth data into the FPN\cite{lin2017feature}
 structure during the R-CNN Mask formation process to improve the detection performance. The authors used Mask R-CNN to train the RGB-D data and the resulting features
 to the FPN structure, to improve the fusion of RGB-D information. The Mask R-CNN algorithm was used by the authors to detect pixel-level state-changing leaves in their
 study. First, the input data are transformed into feature maps through the backbone. Then, a network of region proposals is employed on the feature maps to generate
@@ -306,6 +341,9 @@ pixel segmentation cannot be indicated. In leaf phenotype research, the accuracy
 the proposed method could facilitate the study of 3-D lead phenotype search and improve the accuracy of automatic leaf segmentation.
 
 
+
+
+
 \subsection{Plant Counting}
 Counting plants and plant organs is critical to characterizing plant development.
 Regression or image classification is the simplest and most straightforward way for fruit/organ counting from the perspective of technical development.
@@ -317,7 +355,7 @@ counting accuracy on real images, the study tested only red tomatoes, which have
 of this approach should be further validated for challenging situations such as detecting green tomatoes from leaves. GANs were also used to generate synthetic
 data for model training.
 
-An alternative approach was to use patch-based training. TasselNet was developed to count corn tassels in two phases. In the first phase,
+An alternative approach was to use patch-based training\cite{lu2017tasselnet}. TasselNet was developed to count corn tassels in two phases. In the first phase,
 a local CNN regression model was established to predict the number of tassels in each patch of an image. In the second step, the estimated count in each image patch
 was averaged over the individual pixels in that patch to create a count map with the same spatial dimension as the original image. The sum of all pixel intensities
 in the count map represents the final count of tassels in that image. Experimental results showed that TasselNet achieved counting accuracies from 74.8\% to 97.1\%,
@@ -330,7 +368,7 @@ counting errors due to inaccurate classification.
 
 Object detection is an intuitive approach to counting plants and plant organs in still images: accurate object detection ensures accurate object counts.
 DeepFruits was the first study to explore the use of modern CNN architecture for fruit detection. Several key contributions were recognized in this study.
-First, transfer learning was used to train a Faster RCNN model with 100 labeled images, demonstrating the potential of using limited labeled images to train the CNN
+First, transfer learning was used to train a Faster RCNN\cite{ren2015faster} model with 100 labeled images, demonstrating the potential of using limited labeled images to train the CNN
 architecture. Second, when using RGB images, the trained Faster RCNN model provided a 1\% improvement in F1 score over that of the CRF model. Third, data fusion was
 conducted at the level of the raw data and at the decision level for the Faster RCNN models. A custom two-step framework was proposed using the superpixels generated
 by the simple iterative linear clustering algorithm as proposed regions. A CNN model was used to classify each superpixel as a flower or a non-flower object. While
@@ -342,11 +380,11 @@ obtain plant/plant-organ masks. Then, the obtained masks were post-processed usi
 the objects could be counted. An obvious concern is that although CNNs could provide accurate semantic masks, counting accuracy may still suffer from inaccurate
 post-processing. To address this concern, studies have explored the use of instance segmentation CNNs that can directly segment individual objects in images. These
 studies faced the same challenge in the lack of training data. To overcome this limitation, most of these studies developed algorithms to generate synthetic images for
-model training. Two types of image synthesizing methods have been proposed: rule-based and GAN. Rule-based methods use a predefined leaf model to generate a plant based
+model training. Two types of image synthesizing methods have been proposed: rule-based and GAN\cite{goodfellow2014generative}. Rule-based methods use a predefined leaf model to generate a plant based
 on predefined growth rules. GAN-based approaches,however, could generate synthetic images without sacrificing leaf structure. Thus, a method combining rule-based and
 GAN-based methods was developed for image synthesizing.
 
-Inside a study on Deep Convolutional Neural Networks for Leaf Counting \cite{chaudhurystudy}, the authors modified the ResNet50 residual neural network to learn a leaf
+ResNet50 residual neural network\cite{chaudhurystudy}, in order to train a leaf
 counter by taking an RGB top-view image of a rosette plant as input. They used this network for its ability to generalize, which was crucial for this challenge due to its
 "in the wild" setting, as well as its speed of training and convergence. The ResNet architecture is easier to optimize than other deep networks and addresses the degradation
 problem present in very deep networks, which states that as deep networks converge, the accuracy becomes saturated. The network is modified by removing the last layer
@@ -371,8 +409,8 @@ the segmentation model is used to train the counting model along with the RGB ch
 set of feature maps or vectors from a set of input images. Usually, the design of a deconvolutionary network contains fully connected layers in between to generate the
 feature vector from the clustered feature maps. However, they propose that the features in the semi-global context should be sufficient to segment the leaf regions from 
 the background in the color images, and thus the FC layers could be omitted for their application. One advantage of eliminating FC layers is that it greatly reduces the
-number of trainable parameters without sacrificing performance. For these reasons, they adopt the SegNet architecture. Instead, the convolutional front-end substructure
-of the network is the VGG architecture with batch normalization followed by each convolutional layer. In the convolutional front-end of SegNet, there are five 2×2 pooling
+number of trainable parameters without sacrificing performance. For these reasons, they adopt the SegNet\cite{badrinarayanan2017segnet} architecture. Instead, the convolutional front-end substructure
+of the network is the VGG\cite{simonyan2014very} architecture with batch normalization followed by each convolutional layer. In the convolutional front-end of SegNet, there are five 2×2 pooling
 operations with zero overlap following multiple convolutional layers and rectification each time. Then, the convolutional feature maps are compressed 32 times before
 starting decompression through the deconvolutional back-end. The logic behind providing the counting module with the segmentation mask and the original RGB image instead
 of providing the segmented region in the RGB image or the binary mask alone. Although the segmentation results generated by SegNet are sufficiently accurate for the
@@ -400,29 +438,7 @@ few hundred images for a particular species.
 
 
 
-\section{Fine-Grained Recognition in HTP}
-In this paper, the authors pre-process the images with object localization directly based on prior knowledge such as sensor fusion and experiment setup,
-object segmentation using green-based brightness thresholds or Otsu threshold, and finally contour extraction as an array of contour pixel coordinates.
-Then the authors unfold the 2-dimensional contour into a 1-dimensional radial object descriptor, which indicates the shortest distance from each pixel to the seed.
-Then the authors post-process these results, where they normalize the values in ROD in a range of [0,1] and scale them from different lengths into a fixed
-by sampling or interpolation. To complete the ROD feature they merge them with another low-level local feature descriptor, the histogram of oriented gradients,
-which have local gradients at different orientations, which is powerful for differentiating objects with meaningful texture patterns. The histograms of neighboring
-cells are further grouped into block groups with an overlap ratio to enhance local contrast. Another way the authors used to integrate ROD is ResNet-18 which is a
-type of CNN with residual parts to skip layers so that higher accuracy can be efficiently achieved by using deeper layers. It is the representative of deep feature
-extraction methods because its performance has been demonstrated in plant research. To classify and calculate the loss function, the authors used Softmax regression,
-and learned the set of weight parameters by minimizing the loss function. The first experiment involves soybean plots grown in the field using UAS imagery, where we
-highlight the robustness of their approach under changing camera angle of view. The second experiment involves rosette plants in the greenhouse using a fixed camera,
-where they highlighted the robustness of their approach under sus change in growth phase. They evaluated the robustness of ROD and its fusion with HOG and ResNet in
-Softmax using seven different approaches. The first two approaches, CNN and ResNet-18, are based on CNN, Each convolution layer is followed by a batch normalization
-layer, a ReLu layer, and a max pooling layer. For both CNN and ResNet-18, they manually tuned the mini-batch size and learning rate based on each validation dataset
-before finalizing its classification result. By combining all these layers, they obtained five models, which will be trained using the Scaled Conjugate Gradient method.
-Using the HTP-Soy dataset, the authors found that ROD-ResNet-Softmax achieves the highest validation mA of 0.947 while ROD-HOG-Softmax achieves the highest test mA
-of 0.866, which slightly exceeds ROD-ResNet-Softmax. ROD-Softmax significantly outperforms Fourier-Softmax, which indicates the advantage of ROD over Fourier as a
-contour-based mid-level descriptor. It is even surprising to see that ROD-Softmax achieves mA comparable to HOG-Softmax even though HOG contains much richer information.
-ROD-HOG-Softmax outperforms ResNet-18 in inference of soybean plots for most pairs of growth stages. The advantage of ROD-HOG-Softmax becomes more apparent during the
-later growth stages, where the soybean canopy grows faster and its contour becomes more discriminating. In contrast, in Arabidopsis, Bean, and Komatsuna, the authors
-found that ROD-ResNet-Softmax outperforms almost all other approaches in terms of both validation mA and test mA. ROD-Softmax significantly outperforms Fourier-Softmax
-and achieves classification accuracy comparable to HOG-Softmax.
+
 
 
 
@@ -440,9 +456,9 @@ and achieves classification accuracy comparable to HOG-Softmax.
 \section{Available Dataset}
 
 \subsection{3D Phenotyping for Komatsuna dataset}
-In this paper, they built a platform to capture overhead views of a plant and measure the environmental conditions around it. They first
+Komatsuna dataset\cite{Uchiyama_2017_ICCV_Workshops} has built by a platform to capture overhead views of a plant and measure the environmental conditions around it. They first
 selected a plant species, Komatsuna, which is a Japanese mustard spinach and a leafy vegetable. It can be grown indoors, and is known to
-be resistant to pests and grows very fast. Hydroponic culture is an alternative method.It is clean, irrigation and fertilization are automated
+be resistant to pests and grows very fast. Hydroponic culture is an alternative method. It is clean, irrigation and fertilization are automated
 so that plant growth is accelerated, fewer agricultural chemicals are needed than soil culture, and replanting failures do not normally occur.
 Another advantage is that plant root systems can also be measured because roots growing in water can be captured through cameras. For lighting,
 they used LED lights, with lighting durations and colors programmable using the software provided. To measure ambient temperature, humidity, and
@@ -473,7 +489,7 @@ segmentation of spatiotemporal instances for multiple views. In the relevant lit
 performed using a single view image, and may be more difficult than using multiple views.
 
 \subsection{Multi-Modality Plant Imagery Database}
-This dataset consist of 2 main species the first one is Arabidopsis thalian plants were grown at 20°C, in a 16 h/8 h
+Two main species are in this dataset\cite{cruz2016multi}, first one is Arabidopsis thalian plants were grown at 20°C, in a 16 h/8 h
 day-night cycle with daylight intensity set at $100 \frac{\mu \times mol \times photons}{m \times s}$. The second is black bean plants of the cultivar Jaguar, were
 grown in a day-night cycle of 14 h/10 h with day and night temperatures of 24 and 18°C, respectively, and a daylight intensity set at
 $200 \frac{\mu \times mol \times photons}{m \times s}$. In all cases, seeds were planted in soil covered with a black foam mask to minimize the fluorescence background
@@ -537,7 +553,7 @@ a leaf when it becomes too small. A new leaf is generated when there is a relati
 
 
 \subsection{Fine Grained Annotated Dataset}
-In this dataset the authors collected images of Arabidopsis in 2 different time June 2012 and between September and October 2013. The imaging setup consisted of a growth rack
+Arabidopsis' images\cite{MINERVINI201680} are collected in 2 different time June 2012 and between September and October 2013. The imaging setup consisted of a growth rack
 and an affordable automatic detection system to capture and send images of the scene via a wireless connection to a receiving computer. Plants were illuminated artificially
 and in a controlled manner to emulate daylight on a fixed daily cycle; camera sensors were placed between the lights. Images were captured only during the day for a period
 of time, two cameras were used: a consumer grade 7 Mpixel camera, and abbreviated as Canon, and an even cheaper Raspberry Pi based system. The tobacco images were acquired
@@ -576,7 +592,7 @@ of individual plant images and accompanying binary images that contain the centr
 \item the difference between the number of leaves in the algorithm result and the ground truth $DiffFGLabels = \#Lar - \#Lgt$,
 \item AbsDiffFGLabels, the absolute value of DiffFGLabels.
 \end{itemize}
-\item - For leaf tracking they provide 4 stacks of 13 images each from Ara2012 and 8 stacks of 17 images each from Ara2013. Leaf-level segmentations are provided
+\item For leaf tracking they provide 4 stacks of 13 images each from Ara2012 and 8 stacks of 17 images each from Ara2013. Leaf-level segmentations are provided
 with leaves that have the same label index throughout the sequence to ensure temporal consistency, with the Nawaz and Cavallaro protocol, which is based on overlap
 criteria, and code available from the authors. When leaves are vertical in the image axis, the overlap criteria may not be able to assign the correct matches;
 \item In boundary estimation they used leaf masks where each leaf labels and found its boundary, to produce a labeled indexed image where '0' is the background,
@@ -591,7 +607,7 @@ are encouraged.
 \end{itemize}
 
 \subsection{Deep Learning for Multi-task Plant Phenotyping}
-The main discussion of this paper\cite{Multi-Task} is the ACID dataset consisting of a doubled haploid population of spring wheat plants was obtained from the Nottingham/BBSRC
+The ACID dataset\cite{multitask} consisting of a doubled haploid population of spring wheat plants was obtained from the Nottingham/BBSRC
 Wheat Research Centre and grown in 2l pots in a greenhouse. Imaging was conducted using a 12MP consumer grade camera attached to a custom built imaging system
 that provides a consistent black background containing multiple high resolution peaks. Instead of predicting location directly, the authors performs a pixel-wise regression,
 identifying the high probability areas of each target. Heatmap regression has been successfully used in, among other things human pose estimation. The network
