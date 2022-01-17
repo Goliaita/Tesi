@@ -1,3 +1,4 @@
+from email.policy import default
 import json
 import argparse
 import os
@@ -18,10 +19,15 @@ parser = argparse.ArgumentParser(
 parser.add_argument("--path_label", type=str, required=False, help="Path to labeled images", default="./label/")
 parser.add_argument("--path_images", type=str, required=False, help="Path to images", default="./images/")
 parser.add_argument("--out_path", type=str, help="Path where save the file, that will be saved as coco_labeled.json", default="./")
+parser.add_argument("--resume", action="store_true", help="Will take the directory of saved data of (coco_labels.npz/coco_colors.npz) inside out_path")
 parser.add_argument("--mpi", action='store_true',
     help="Run the program as a parallel version (must run with mpiexec) (only for the reading part)")
 
+
+parser.add_argument("--category_name", default="non_overlapped", type=str, help="Category name to set the labels")
+
 args = parser.parse_args()
+
 
 if args.mpi:
     try:
@@ -45,7 +51,7 @@ def order_segmentation(segmented_array, index):
     array_in = np.delete(array_in, 0, axis=0)
 
     for i in range(2, len(segmented_array), 2):
-        counter = 100
+        counter = np.infty
 
         for k in range(array_in.shape[0]-1):
             try:
@@ -123,7 +129,8 @@ def coco_label_creator(label_path: str, ids=None, rank=0):
         if (l % 10) == 0:
             print("Rank: {}, Examinated {} files".format(rank, l))
             sys.stdout.flush()
-            world.Barrier()
+            if mpi:
+                world.Barrier()
         l += 1
 
     return json_image, image_colors
@@ -158,7 +165,7 @@ def compose_json(labels, colors, img_path, ids=None, rank=0):
 
     composed_json["categories"].append({
         "id": 2,
-        "name": "leaf",
+        "name": args.category_name,
         "supercategory": "",
         "color": "#78ef51",
         "metadata": {},
@@ -222,19 +229,25 @@ def compose_json(labels, colors, img_path, ids=None, rank=0):
             
             random_number = random.randint(0,16777215)
             hex_number = str(hex(random_number))
-            hex_number ='#'+ hex_number[2:]
+            hex_number = f"#{hex_number[2:]}"
             try:
-                segmentation = order_segmentation(segmentation, i)
+                if i == 27 and id == 223:
+                    print(len(segmentation))
+                segmented = order_segmentation(segmentation, i)
             except Exception as e:
                 print(e)
+                traceback.print_exc()
                 print("Rank {}, got error at photo {}, at element {}".format(rank, i, j))
+                if not args.resume:
+                    np.save(f"{args.out_path}/coco_labels.npz", labels)
+                    np.save(f"{args.out_path}/coco_colors.npz", colors)
                 exit()
 
             buff_json = {
                 "id": id,
                 "image_id": i,
                 "category_id": 2,
-                "segmentation": segmentation.reshape((1,-1)).tolist(),
+                "segmentation": segmented.reshape((1,-1)).tolist(),
                 "area": (max_x-min_x) * (max_y - min_y),
                 "bbox": [max_x, max_y, min_x, min_y],
                 "iscrowd": False,
@@ -245,41 +258,50 @@ def compose_json(labels, colors, img_path, ids=None, rank=0):
             id += 1
             composed_json["annotations"].append(buff_json)
 
-        if id % 10 == 0:
+        if i % 10 == 0:
             if ids is not None:
                 print("Rank: {}, has elaborated {} images of {}".format(rank, i, total_images))
             else:
-                print("Process has elaborated {} picture at object {}".format(i, j))
+                print(f"Process has elaborated {i}")
         sys.stdout.flush()
 
     return composed_json
 
 if __name__=="__main__":
 
-    if mpi:
-        world = MPI.COMM_WORLD
-        agents_number = world.Get_size()
-        rank = world.Get_rank()
-        listed = os.listdir(args.path_label)
-        portion = len(listed) / agents_number
-        ids = [int(rank * portion), int((rank * portion) + portion)]
-        print("Agent ", rank, " got ", portion, " rows of dataset")
+    if args.resume:
+
+        label   = np.load(f"{args.out_path}/coco_labels.npz.npy")
+        colors  = np.load(f"{args.out_path}/coco_colors.npz.npy")
+
+    else:
+
+        if mpi:
+            world = MPI.COMM_WORLD
+            agents_number = world.Get_size()
+            rank = world.Get_rank()
+            listed = os.listdir(args.path_label)
+            portion = len(listed) / agents_number
+            ids = [int(rank * portion), int((rank * portion) + portion)]
+            print("Agent ", rank, " got ", portion, " rows of dataset")
+            sys.stdout.flush()
+        else:
+            ids = None
+            rank = 0
+        
+        
+        label, colors = coco_label_creator(args.path_label, ids, rank)
+
+        if mpi:
+            print("Rank: {} finished to extract shape from images".format(rank))
+        else:
+            print("Finished to extract shape from images")
+
         sys.stdout.flush()
-    else:
-        ids = None
-        rank = 0
+
+        label = label.reshape((-1, 4))
+
     
-    
-    label, colors = coco_label_creator(args.path_label, ids, rank)
-
-    if mpi:
-        print("Rank: {} finished to extract shape from images".format(rank))
-    else:
-        print("Finished to extract shape from images")
-
-    sys.stdout.flush()
-
-    label = label.reshape((-1, 4))
 
     if mpi:
         world.Barrier()
