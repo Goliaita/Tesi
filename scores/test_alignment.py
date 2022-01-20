@@ -8,6 +8,7 @@ import argparse
 import os
 
 
+
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(
             description='Extrapolate and manipulate images to obtain leaf dimension')
@@ -27,7 +28,10 @@ def parse_args(argv=None):
     return parser.parse_args(argv)
 
 
-def get_frames(video_name, saving_folder, frame):
+def get_frames(video_name, saving_folder, frame, start=0):
+
+    print(f"Start analyzing video n° {frame}")
+
     # Create a pipeline
     pipeline = rs.pipeline()
 
@@ -37,11 +41,27 @@ def get_frames(video_name, saving_folder, frame):
 
     rs.config.enable_device_from_file(config, video_name)
 
+
     # Get device product line for setting a supporting resolution
     pipeline_wrapper = rs.pipeline_wrapper(pipeline)
     pipeline_profile = config.resolve(pipeline_wrapper)
     device = pipeline_profile.get_device()
-    # device_product_line = str(device.get_info(rs.camera_info.product_line))
+
+    device = pipeline_profile.get_device()
+
+    sensors = device.query_sensors()
+
+    fps_d = sensors[0].get_stream_profiles()[0].fps()
+    fps_rgb = sensors[1].get_stream_profiles()[0].fps()
+
+    format_d = sensors[0].get_stream_profiles()[0].format()
+    format_rgb = sensors[1].get_stream_profiles()[0].format()
+
+    width_d = sensors[0].get_stream_profiles()[0].as_video_stream_profile().width()
+    width_rgb = sensors[1].get_stream_profiles()[0].as_video_stream_profile().width()
+
+    height_d = sensors[0].get_stream_profiles()[0].as_video_stream_profile().height()
+    height_rgb = sensors[1].get_stream_profiles()[0].as_video_stream_profile().height()
 
     found_rgb = False
     for s in device.sensors:
@@ -52,9 +72,9 @@ def get_frames(video_name, saving_folder, frame):
         print("The demo requires Depth camera with Color sensor")
         exit(0)
 
-    config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 15)
+    config.enable_stream(rs.stream.depth, width_d, height_d, format_d, fps_d)
 
-    config.enable_stream(rs.stream.color, 640, 480, rs.format.rgb8, 15)
+    config.enable_stream(rs.stream.color, width_rgb, height_rgb, format_rgb, fps_rgb)
 
 
 
@@ -64,14 +84,13 @@ def get_frames(video_name, saving_folder, frame):
     
 
     # Getting the depth sensor's depth scale (see rs-align example for explanation)
-    depth_sensor = profile.get_device().first_depth_sensor()
-    depth_scale = depth_sensor.get_depth_scale()
-    print("Depth Scale is: " , depth_scale)
+    # depth_sensor = profile.get_device().first_depth_sensor()
+    # depth_scale = depth_sensor.get_depth_scale()
 
     # We will be removing the background of objects more than
     #  clipping_distance_in_meters meters away
-    clipping_distance_in_meters = 1 #1 meter
-    clipping_distance = clipping_distance_in_meters / depth_scale
+    # clipping_distance_in_meters = 1 #1 meter
+    # clipping_distance = clipping_distance_in_meters / depth_scale
 
     # Create an align object
     # rs.align allows us to perform alignment of depth frames to others frames
@@ -113,8 +132,8 @@ def get_frames(video_name, saving_folder, frame):
                 depth_frame_to_get = depth_image
 
             if frame_number > color_frame.frame_number:
-                cv2.imwrite(f"{saving_folder}/depth/depth_{frame}.png", depth_frame_to_get)
-                cv2.imwrite(f"{saving_folder}/color/color_{frame}.png", color_frame_to_get)
+                cv2.imwrite(f"{saving_folder}/depth/depth_{start+frame:03d}.png", depth_frame_to_get)
+                cv2.imwrite(f"{saving_folder}/color/color_{start+frame:03d}.png", color_frame_to_get)
                 break
                 
     finally:
@@ -125,8 +144,7 @@ def get_frames(video_name, saving_folder, frame):
 
 if __name__ == "__main__":
     args = parse_args()
-
-    # video_name = "C:/Users/david/Pictures/realsense/video/video_2.bag"
+    start = 0
 
     if not os.path.isdir(args.saving):
         os.mkdir(args.saving)
@@ -135,13 +153,18 @@ if __name__ == "__main__":
     else:
         if not os.path.isdir(f"{args.saving}/color"):
             os.mkdir(f"{args.saving}/color")
+        else:
+            last = os.listdir(f"{args.saving}/color")[-1]
+            last = last.split("_")[-1].split(".")[0]
+            start = int(last) + 1
         if not os.path.isdir(f"{args.saving}/depth"):
             os.mkdir(f"{args.saving}/depth")
 
     videos = os.listdir(args.folder)
 
     for idx, video in enumerate(videos):
-        get_frames(f"{args.folder}/{video}", args.saving, idx)
+        if ".bag" in video:
+            get_frames(f"{args.folder}/{video}", args.saving, idx, start)
 
 
 
