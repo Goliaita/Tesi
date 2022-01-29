@@ -40,7 +40,46 @@ of the plant just cut out. All this has been created to facilitate the adaptatio
 
 \section{Instance Segmentation}
 The instance segmentation part is performed by BlendMask \cite{chen2020blendmask}. Here we use this convnet in order to segment each instance of leaves. All the leaves found
-are saved into a file with the segmentation map still in COCO format. This convnet is a hybrid of top-down and bottom-up approaches, 
+are saved into a file with the segmentation map still in COCO format. This convnet is a hybrid of top-down and bottom-up approaches, BlendMask consists of a detector
+network and a mask branch. The mask branch has three parts, a bottom module to predict the score maps, a top layer to predict the instance
+attentions, and a blender module to merge the scores with attentions. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{blendmask_net} 
+    \caption{Blendmask pipeline, }
+\end{figure}
+
+The bottom module predicting score maps which that are called bases. The input for the bottom module could be backbone features like YOLACT or Panoptic FPN. 
+Into the top layer the authors append a single convolution layer on each of the detection towers to predict top-level attentions. Then the blender module get as input the 
+bottom-level bases, where with a RoIPooler in Mask R-CNN crops the bases with each proposal, and the it resize the region to a fixed size.
+During training, the net simply use ground truth boxes as the proposals. During inference, FCOS \cite{tian2019fcos} predict the results. 
+
+Thanks to this network, we achieved good results in leaf detection and segmentation, so we figured out how to implement the next section that extrapolate the information about
+the leaves. 
+
+
+
+
+\section{Feature extraction}
+After segmentation we collect the information about the extracted leaf and derive only those with a probability of not being covered greater than 80\%.
+Next, we save the predictions coming out of the blendmask in a file containing both the leaf identifier and the name of the image to which the leaf belongs.
+With this, we are able to find out where the leaf is present in the image, so that in the next step we can extrapolate it from the depth image. In this way, we will
+finally obtain the 3D image with an rgb part and the fourth dimension, which is the depth. By means of a simple remapping we then obtain the xyz position on the camera plane.
+$$
+\begin{cases}
+    Z = z / depth_scale \\
+    X = (x - cx) * Z / fx \\
+    Y = (y - cy) * Z / fy
+\end{cases}
+$$
+Here we have two camera intrinsics which can be used to compute this functions. Those are related to the image which we are refferring to. $cx$, $cy$, $fx$ and $fy$ are the 
+center of camera image and the $f$ are the focal length of the lens. Now with the xyz positions of the image we can finally calculate the various properties. The first
+most interesting one will be the area of the leaf for which we will rely on the pyvista library, otherwise for the calculation of the major and minor axes we will make
+use of the scikit-learn library. We also calculated the height of the intrinsic leaf and the height of the leaf from the ground so that we could see how high it is from
+the ground and how high it actually is.
+
+
 
 
 
@@ -48,13 +87,6 @@ are saved into a file with the segmentation map still in COCO format. This convn
 In order to understand which network was best for our purpose, we used different CNNs, so that we could understand which one was best suited to different types of leaves
 in different contexts.
 
-
-
-%%% Parlare di blendmask e di come funziona
-
-%%% Parlare di ciò che faccio io
-
-%%% Specificare le altre reti 
 
 \subsection{YOLACT}
 The first network used was YOLACT (You Only Look At CoefficienTs) \cite{bolya2019yolact}. The network proposes to split instance segmentation into two simpler tasks,
@@ -95,8 +127,8 @@ Adding deformable convolution layers into the backbone of YOLACT, leads to a +1.
 handling instances with different scales, rotations, and aspect ratios by aligning to the target instances, YOLACT does not have a re-sampling process.
  
 \subsection{SOLO}
-Instance categories, is the quantized center locations and object sizes, which enables to Segment Objects by LOcations (SOLO) \cite{wang2020solov2}. An image can be divided into squared number
-of cells, with the same numbers of center location classes. 
+Instance categories, is the quantized center locations and object sizes, which enables to Segment Objects by LOcations (SOLO) \cite{wang2020solov2}. An image can be
+divided into squared number of cells, with the same numbers of center location classes. 
 
 
 

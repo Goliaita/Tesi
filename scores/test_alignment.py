@@ -81,7 +81,13 @@ def get_frames(video_name, saving_folder, frame, start=0):
     # Start streaming
     profile = pipeline.start(config)
 
-    
+    profile = pipeline.get_active_profile()
+    print(profile)
+    depth_profile = rs.video_stream_profile(profile.get_stream(rs.stream.color))
+    print(depth_profile)
+    depth_intrinsics = depth_profile.get_intrinsics()
+    print(f"intrinsics: {depth_intrinsics}")
+    exit()
 
     # Getting the depth sensor's depth scale (see rs-align example for explanation)
     # depth_sensor = profile.get_device().first_depth_sensor()

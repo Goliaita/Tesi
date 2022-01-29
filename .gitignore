@@ -300,4 +300,9 @@ label/
 *.txt
 coco_labeled.json
 result*/
+*.png
+runs/
+*.json
+*.npy
+
 
