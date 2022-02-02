@@ -16,7 +16,7 @@ Segment each instance of a plant is an hard work, images can have different dime
 to identify each plant separately and then go on to identify each instance. In order to classify each plant, we made use of different technologies and we needed to modify
 the datasets at our disposal. To do this we used an online tool called Make Sense, which allowed us to create the position annotations of the boxes for object detection.
 
-\section{Object Detection}
+\subsection{Object Detection}
 For the development of object detection of individual plants we used one of the best known and most powerful neural networks in the field of object detection YOLO
 \cite{redmon2016look}. This network, taken in version 5, in contrast to the sliding windows, sees the entire image during training and test time so it implicitly encodes
 contextual information about classes as well as their appearance. Inside YOLO the separate components of object detection are unified into a single neural network.
@@ -24,7 +24,7 @@ It divides the input image into an $S \times S$ grid. If the center of an object
 Each grid cell predicts B bounding boxes and confidence scores for those boxes. Each of this consists of 5 predictions: x, y, w, h, and confidence. The (x, y)
 coordinates represent the center of the box relative to the bounds of the grid cell. The width and height are predicted relative to the whole image. Finally
 the confidence prediction represents the IOU between the predicted box and any ground truth box.
-\begin{figure}[h]
+\begin{figure}[h] 
     \centering
     \includegraphics[width=1\textwidth]{yolo_net} 
     \caption{YOLO architecture}
@@ -38,7 +38,7 @@ frames are then created, one for each plant identified by the network, which are
 of the plant just cut out. All this has been created to facilitate the adaptation to the segmentation network and to recompose the data.
 
 
-\section{Instance Segmentation}
+\subsection{Instance Segmentation}
 The instance segmentation part is performed by BlendMask \cite{chen2020blendmask}. Here we use this convnet in order to segment each instance of leaves. All the leaves found
 are saved into a file with the segmentation map still in COCO format. This convnet is a hybrid of top-down and bottom-up approaches, BlendMask consists of a detector
 network and a mask branch. The mask branch has three parts, a bottom module to predict the score maps, a top layer to predict the instance
@@ -46,8 +46,8 @@ attentions, and a blender module to merge the scores with attentions.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=1\textwidth]{blendmask_net} 
-    \caption{Blendmask pipeline, }
+    \includegraphics[width=1\textwidth]{blend_net} 
+    \caption{Blendmask pipeline overview}
 \end{figure}
 
 The bottom module predicting score maps which that are called bases. The input for the bottom module could be backbone features like YOLACT or Panoptic FPN. 
@@ -61,9 +61,9 @@ the leaves.
 
 
 
-\section{Feature extraction}
+\subsection{Feature extraction}
 After segmentation we collect the information about the extracted leaf and derive only those with a probability of not being covered greater than 80\%.
-Next, we save the predictions coming out of the blendmask in a file containing both the leaf identifier and the name of the image to which the leaf belongs.
+Next, we save the predictions coming out of the blendmask with the information about both the leaf identifier and the name of the image to which the leaf belongs.
 With this, we are able to find out where the leaf is present in the image, so that in the next step we can extrapolate it from the depth image. In this way, we will
 finally obtain the 3D image with an rgb part and the fourth dimension, which is the depth. By means of a simple remapping we then obtain the xyz position on the camera plane.
 $$
@@ -73,13 +73,32 @@ $$
     Y = (y - cy) * Z / fy
 \end{cases}
 $$
-Here we have two camera intrinsics which can be used to compute this functions. Those are related to the image which we are refferring to. $cx$, $cy$, $fx$ and $fy$ are the 
-center of camera image and the $f$ are the focal length of the lens. Now with the xyz positions of the image we can finally calculate the various properties. The first
-most interesting one will be the area of the leaf for which we will rely on the pyvista library, otherwise for the calculation of the major and minor axes we will make
-use of the scikit-learn library. We also calculated the height of the intrinsic leaf and the height of the leaf from the ground so that we could see how high it is from
-the ground and how high it actually is.
+Here we have two camera intrinsics which can be used to compute this functions. Those are related to the image which we are refferring to. $cx$, $cy$ are the 
+center of camera image while $fx$ and $fy$ are the focal length of the lens. Now with the xyz positions of the image we can finally calculate the various properties. The first
+most interesting one will be the area of the leaf for which we will rely on the pyvista \cite{sullivan2019pyvista} library, computed on the mesh surface obtained by the
+library itself. This method does not consider the part of the leaf that are overlapped if it is curved, so the surface area could be underestimated. For this reason we
+have selected only the leaves which are non overlapped and we have trained the networks with this categories of leaves. Another metrics which we have computed is
+the calculation of the major and minor axes, where with scikit-learn \cite{scikit-learn} metrics we have computed the centroids of the leaf and then with the
+orientation vector we have computed the length of the axis and the direction. We also calculated the height of the intrinsic leaf with just subtracting the highest
+value on the $Z$ axis with the lowest one, and the height of the leaf from the ground, where in a first time we have computed with pyransac3d the plane of the base surface and
+then with the points of the leaf we have computed the relative distance from the plane and obtaining the leaf height from the ground.
 
 
+\section{Used Metrics}
+In this section the two evaluation techniques which are used by the referenced paper \cite{scharr2016leaf} the DICE score and the Intersection over Union (IoU).
+
+\subsection{DICE Score}
+For semantic and instance segmentation is used the F1 score, or DICE score which is obtained by the fraction of the true positive prediction by the sum of the true positive
+with false negative and false positive prediction:
+$$F_{1}=\frac{(2)\cdot \mathrm {TP}}{(2)\cdot \mathrm {TP} + 1 \cdot \mathrm {FN} +\mathrm {FP}}$$
+which $TP$ are the true positive in the image, $FP$ are the false positive detected pixel and $FN$ are the false negative found in the image.
+
+\subsection{IoU Score}
+The other metrics is the Intersection over Union (IoU), or Jaccard score which is computed by the fraction of the intersection of the predicted with ground truth, with the 
+union of the predicted mask with the ground truth one:
+$$J(A,B)={{|A\cap B|} \over {|A\cup B|}}$$
+where the $A$ is the predicted mask and $B$ is the ground truth mask. It measures the similarity between sets of finite samples and is defined as the size of the
+intersection divided by the size of the union of the sets of samples.
 
 
 
@@ -128,9 +147,27 @@ handling instances with different scales, rotations, and aspect ratios by aligni
  
 \subsection{SOLO}
 Instance categories, is the quantized center locations and object sizes, which enables to Segment Objects by LOcations (SOLO) \cite{wang2020solov2}. An image can be
-divided into squared number of cells, with the same numbers of center location classes. 
+divided into squared number of cells, with the same numbers of center location classes. Each output channel is responsible for one of the central location categories
+and the corresponding channel map should predict the instance mask of the object belonging to that location. In essence, an instance position category approximates
+the position of the object center of an instance. Thus, classifying each pixel into its instance position category is equivalent to predicting the object center of
+each pixel in latent space.
 
+With the SOLO framework, the network optimizes an end-to-end way for the instance segmentation task using mask annotations exclusively, and perform pixel-level
+instance segmentation outside the restrictions of local box detection and pixel grouping. For each grid SOLO predicts the C-dimensional output to indicate the
+semantic class probabilities, where $C$ is the number of classes. The design is based on the assumption that each cell of the $S\times S$ grid must
+belong to one individual instance, thus only belonging to one semantic category.
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{solo}
+    \caption{SOLO framework, semantic and mask task}
+\end{figure}
+
+In parallel with the semantic category prediction, each positive grid cell will also generate the corresponding instance mask. A straightforward approach to
+predicting the instance mask is to adopt fully convolutional networks, such as FCNs in semantic segmentation.
+
+SOLO use FPN which generates a pyramid of feature maps with different sizes with a fixed number of channels for each level. These maps are used as input for each prediction
+head: semantic category and instance mask.
 
 
 
