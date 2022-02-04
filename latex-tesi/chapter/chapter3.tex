@@ -24,7 +24,7 @@ It divides the input image into an $S \times S$ grid. If the center of an object
 Each grid cell predicts B bounding boxes and confidence scores for those boxes. Each of this consists of 5 predictions: x, y, w, h, and confidence. The (x, y)
 coordinates represent the center of the box relative to the bounds of the grid cell. The width and height are predicted relative to the whole image. Finally
 the confidence prediction represents the IOU between the predicted box and any ground truth box.
-\begin{figure}[h] 
+\begin{figure}[ht] 
     \centering
     \includegraphics[width=1\textwidth]{yolo_net} 
     \caption{YOLO architecture}
@@ -44,7 +44,7 @@ are saved into a file with the segmentation map still in COCO format. This convn
 network and a mask branch. The mask branch has three parts, a bottom module to predict the score maps, a top layer to predict the instance
 attentions, and a blender module to merge the scores with attentions. 
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=1\textwidth]{blend_net} 
     \caption{Blendmask pipeline overview}
@@ -131,7 +131,7 @@ YOLACT is composed of different components, the backbone formed by the resnet, i
 It is flanked by the Feature Pyramid Network (FPN) suitably modified to obtain a more precise classification and, where the softmax cross entropy is used to refine
 the prediction process.
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=1\textwidth]{yolact_net} 
     \caption{YOLACT model using ResNet-101 + FPN}
@@ -167,7 +167,7 @@ instance segmentation outside the restrictions of local box detection and pixel 
 semantic class probabilities, where $C$ is the number of classes. The design is based on the assumption that each cell of the $S\times S$ grid must
 belong to one individual instance, thus only belonging to one semantic category.
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=1\textwidth]{solo}
     \caption{SOLO framework, semantic and mask task}
