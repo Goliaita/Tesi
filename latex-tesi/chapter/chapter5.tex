@@ -29,13 +29,13 @@ fluorescent, then they will be inserted these within the network for training.
     \centering
     \begin{subfigure}{.5\textwidth}
       \centering
-      \includegraphics[width=.4\linewidth]{arabidopsis}
+      \includegraphics[width=.9\linewidth]{arabidopsis}
       \caption{Arabidopsis image from MMI database}
       \label{fig:sub1}
     \end{subfigure}%
     \begin{subfigure}{.5\textwidth}
       \centering
-      \includegraphics[width=.4\linewidth]{bean}
+      \includegraphics[width=.9\linewidth]{bean}
       \caption{Bean image from MMI database}
       \label{fig:sub2}
     \end{subfigure}
@@ -68,13 +68,13 @@ we sized the found leaves.
   \centering
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=.4\linewidth]{komatsuna_training}
+    \includegraphics[width=.9\linewidth]{komatsuna_training}
     \caption{Training image for Komatsuna dataset}
     \label{fig:sub3}
   \end{subfigure}%
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=.4\linewidth]{komatsuna_test}
+    \includegraphics[width=.9\linewidth]{komatsuna_test}
     \caption{Test image for Komatsuna dataset}
     \label{fig:sub4}
   \end{subfigure}
@@ -101,13 +101,13 @@ fully visible not covered by other leaves was also included.
   \centering
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=.4\linewidth]{our_train}
+    \includegraphics[width=.9\linewidth]{our_train}
     \caption{training image for our dataset}
     \label{fig:sub5}
   \end{subfigure}%
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=.4\linewidth]{our_test}
+    \includegraphics[width=.9\linewidth]{our_test}
     \caption{Test image for our dataset}
     \label{fig:sub6}
   \end{subfigure}
@@ -130,6 +130,67 @@ trained via yolo for object detection to our dataset as well in order to automat
 
 
 \section{State of The art Comparison}
+Several networks have been used, all of this are trained on a Nvidia 3090 with 24GB of dedicated RAM via the PyTorch framework, which is an efficient library for
+building deep learning projects using the Python programming language. 
+
+All of the nets are trained with both of the dataset Multi-Modality Imagery Database and Komatsuna, the first with both the images of Arabidopsis and Bean, 
+but for practical reasons only fluorescence images are used for bean plants. The dataset has been divided into two parts: the train part is composed of 450
+images, while the validation part used to calculate the metrics is composed of 300 images. The increased komatsuna has been divided into three parts train
+validation and test where the first one consists of 2700 images and the other two of 900 images each. 
+
+The first ones used are yolact and its variant yolact plus where, via ResNet-101 and ResNet-101 with deformed convolutions, they were trained with the two datasets.
+Several attempts were made with various configurations but the most suitable turned out to be the ResNet-101 deformed and not, with a learning rate of $0.001$, were
+also started several training sessions with different epochs but exceeded the hundred networks have not shown significant improvements.\\
+Blendmask was trained only with the deformed ResNet-101 for both datasets with a learning rate of $0.001$ completing the training quickly with about 200 epochs,
+increasing the number of the latter did not detect significant improvements.\\
+The last one to be trained is SOLOv2, which was also tested with deformable convolutional networks on ResNet-101. After several tests we found a better performance
+after about 200 epochs, on komatsuna with a learning rate of $0.001$, while for the images of the Multi-Modality Imagery Database, it was necessary to further lower
+the learning rate of the network to $0.0001$ due to the smaller size of the images.
+
+
+\subsection{Multi-Modality Imagery Database}
+To validate our work we need to compare our results with what is the state of the art, thanks Bhugra, Garg, Chaudhury and Lall \cite{9411981}, we were able to establish that
+the performance of the networks used are comparable to what is a more targeted solution like the one made by the authors of the paper.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.8\textwidth]{comparison_ppd}%
+  \caption{Comparison between nets and \cite{9411981} on plant phenotyping dataset}%
+\end{figure}
+
+Thus, the proposed networks are able to perform realistically precise segmentations even on a varied dataset such as plant phenotyping.
+
+\subsection{Komatsuna dataset}
+With the previous results we can ascertain that the networks are able to behave in a similar way to what is a solution designed specifically for the problem at hand.
+Then we compared what were the results obtained with komatsuna with what is the plant phenotyping dataset obtained from \cite{9411981}. 
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=.8\textwidth]{comparison_komatsuna}%
+  \caption{Comparison between nets and \cite{9411981} on Komatsuna dataset}%
+\end{figure}
+
+We have noticed that for komatsuna, also because of the higher quantity of images available, the results are much better and therefore able to extrapolate in
+a more optimal way the leaves.
+
+\subsection{Our Dataset}
+To validate all the data we need to check whether the results obtained from the networks are valid or not. To do this we used our dataset where at first we
+applied the yolo-net so as to obtain the individual images then through blendmask, we extrapolated the individual instances of the leaves.
+We used Blendmask because even though SOLOv2 performed better on paper, it turned out in reality to be poorly adapted to a leaf type it had not seen before.
+In fact Blendmask identified basil leaves better than SOLOv2, despite both being trained for komatsuna.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=.8\linewidth]{measurement.png}
+\end{figure}
+
+As we can see from the results obtained the net and the measures are relatively accurate as long as the leaf is as linear as possible, unlike in cases where
+the leaves are very bent by the weight, our method can not predict these flaws and then the measures are distorted. We can therefore deduce that our method is able
+to calculate on average with a good probability the correct size of the leaves with an error of about 2/3 cm.
+
+
+
+
 
 
 
