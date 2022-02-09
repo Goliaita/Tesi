@@ -92,7 +92,24 @@ the metrics we used the remaining 900 images.
 \subsection{Our Dataset}
 In our dataset we collect the most of images in a single day at a local farm, consisting of a set of images of basil seedlings. Some plants were subsequently collected
 from which a second set of images was extrapolated over the next five days. The first set designed for training has a total of 128 images of size $640\times 480$
-containing a total of 892 seedlings. All of these images have appropriately aligned depth images attached to them, so that 3D networks can also be trained. The second
+containing a total of 892 seedlings. 
+
+\begin{figure}[ht] 
+  \centering
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=.9\linewidth]{top_view}
+    \caption{Top view of depth images}
+  \end{subfigure}%
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=.9\linewidth]{side_view}
+    \caption{Side view of depth images}
+  \end{subfigure}
+  \caption{Example of depth images representation}
+\end{figure}
+
+All of these images have appropriately aligned depth images attached to them, so that 3D networks can also be trained. The second
 set designed for testing consists of a set of images divided by days for a total of five days with 20 daily images. Their size is $1280\times 720$ with the depth images also
 aligned. Each image consists of four seedlings rotated and swapped positions at each acquisition. On the last day, the dimensional information of the leaves that are
 fully visible not covered by other leaves was also included.
@@ -102,7 +119,7 @@ fully visible not covered by other leaves was also included.
   \begin{subfigure}{.5\textwidth}
     \centering
     \includegraphics[width=.9\linewidth]{our_train}
-    \caption{training image for our dataset}
+    \caption{Training image for our dataset}
     \label{fig:sub5}
   \end{subfigure}%
   \begin{subfigure}{.5\textwidth}
@@ -133,6 +150,8 @@ trained via yolo for object detection to our dataset as well in order to automat
 Several networks have been used, all of this are trained on a Nvidia 3090 with 24GB of dedicated RAM via the PyTorch framework, which is an efficient library for
 building deep learning projects using the Python programming language. 
 
+
+
 All of the nets are trained with both of the dataset Multi-Modality Imagery Database and Komatsuna, the first with both the images of Arabidopsis and Bean, 
 but for practical reasons only fluorescence images are used for bean plants. The dataset has been divided into two parts: the train part is composed of 450
 images, while the validation part used to calculate the metrics is composed of 300 images. The increased komatsuna has been divided into three parts train
@@ -155,7 +174,7 @@ the performance of the networks used are comparable to what is a more targeted s
 \begin{figure}[h]
   \centering
   \includegraphics[width=.8\textwidth]{comparison_ppd}%
-  \caption{Comparison between nets and \cite{9411981} on plant phenotyping dataset}%
+  \caption{Comparison between Blendmask\cite{chen2020blendmask}, SOLOv2\cite{wang2020solov2}, YOLACT\cite{bolya2019yolact} and \cite{9411981} on plant phenotyping dataset}%
 \end{figure}
 
 Thus, the proposed networks are able to perform realistically precise segmentations even on a varied dataset such as plant phenotyping.
@@ -167,7 +186,7 @@ Then we compared what were the results obtained with komatsuna with what is the 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=.8\textwidth]{comparison_komatsuna}%
-  \caption{Comparison between nets and \cite{9411981} on Komatsuna dataset}%
+  \caption{Comparison between Blendmask\cite{chen2020blendmask}, SOLOv2\cite{wang2020solov2}, YOLACT\cite{bolya2019yolact}}%
 \end{figure}
 
 We have noticed that for komatsuna, also because of the higher quantity of images available, the results are much better and therefore able to extrapolate in
@@ -179,18 +198,31 @@ applied the yolo-net so as to obtain the individual images then through blendmas
 We used Blendmask because even though SOLOv2 performed better on paper, it turned out in reality to be poorly adapted to a leaf type it had not seen before.
 In fact Blendmask identified basil leaves better than SOLOv2, despite both being trained for komatsuna.
 
-\begin{figure}
+\begin{figure}[ht]
   \centering
   \includegraphics[width=.8\linewidth]{measurement.png}
+  \caption{Representation of masks ground truth with correspondent computed one}
 \end{figure}
 
 As we can see from the results obtained the net and the measures are relatively accurate as long as the leaf is as linear as possible, unlike in cases where
 the leaves are very bent by the weight, our method can not predict these flaws and then the measures are distorted. We can therefore deduce that our method is able
-to calculate on average with a good probability the correct size of the leaves with an error of about 2/3 cm.
+to calculate on average with a good probability the correct size of the leaves with an error of about 5/6 cm.
 
 
-
-
+\begin{figure}[ht] 
+  \centering
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=.9\linewidth]{leaf_error}
+    \caption{Errors for each measurement}
+  \end{subfigure}%
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=.9\linewidth]{mean_error}
+    \caption{Mean error of each measure}
+  \end{subfigure}
+  \caption{Errors computed from ground truth}
+\end{figure}
 
 
 
