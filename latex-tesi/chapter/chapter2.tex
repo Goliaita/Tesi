@@ -140,7 +140,7 @@ the input segmented mask, then these leaf candidates are the final instances of 
 form a part of the output instance and the modified mask is used as input for the multi-leaf matching model.
 Leaf templates have a great influence on matching multi-leaf templates. Thus, to generate templates that accommodate large variations in
 the shape and size of the leaves of a plant species in its growth cycle. A post-processing pipeline is used to remove stems based on the Hough
-transform. The Hough transform generates a parameter space, where each pixel in an x-y image space is mapped to a line of an m-c parameter space
+transform. The Hough transform generates a parameter space, where each pixel in an $x-y$ image space is mapped to a line of an $m-c$ parameter space
 and the peaks represent the lines. Since the canonical leaf shape is used, peaks with m centered around zero degrees correspond to stems. Since
 the multi-leaf template matching algorithm is sensitive to rotation and scale, the representative shapes are varied using geometric transformations
 such as scaling and rotation. This database of templates with different shapes, sizes, and orientations, generated through real-time image sampling,
@@ -358,12 +358,12 @@ data for model training.
 An alternative approach was to use patch-based training\cite{lu2017tasselnet}. TasselNet was developed to count corn tassels in two phases. In the first phase,
 a local CNN regression model was established to predict the number of tassels in each patch of an image. In the second step, the estimated count in each image patch
 was averaged over the individual pixels in that patch to create a count map with the same spatial dimension as the original image. The sum of all pixel intensities
-in the count map represents the final count of tassels in that image. Experimental results showed that TasselNet achieved counting accuracies from 74.8\% to 97.1\%,
+in the count map represents the final count of tassels in that image. Experimental results showed that TasselNet achieved counting accuracies from $74.8\%$ to $97.1\%$,
 which were 2 to 5 times higher than those of conventional methods. TasselNet uses the patch-based training method, which substantially increases the number of
 training images. For classification-based methods, plant/organ counts were treated as a discrete counting problem and, therefore, a predefined score or grade was
 assigned to a given image rather than an exact count. An example of a classification-based method is WheatNet, which was developed to predict the percentage of
 flowering in wheat images. Multiple images were acquired for each plot. A total of 11 classes were annotated for each plot, corresponding to 11 visual scores with
-a percentage header from 0 to 100\% with a 10\% interval. The average prediction of all images in a plot was the final percent header for that plot, which reduced
+a percentage header from $0$ to $100\%$ with a $10\%$ interval. The average prediction of all images in a plot was the final percent header for that plot, which reduced
 counting errors due to inaccurate classification.
 
 Object detection is an intuitive approach to counting plants and plant organs in still images: accurate object detection ensures accurate object counts.
@@ -403,14 +403,14 @@ scratch without using any pre-trained weights for initialization. Also in SegNet
 learning rate was used for all layers in their training. They augmented the data and trained the network in 3 steps. First, for each image, they extracted the union
 of the first 20 object proposals, flipped from top to bottom and left to right, rotated with an angular step of 4 degrees, cropped the largest square from the central
 position to avoid dark regions due to rotation, and created a pair of blurred versions with Gaussian and the corresponding sharp images. Second, they took the proposed
-images and their flipped versions and generated nearly 0.3M subsamples of size 224×224 deterministically with a fixed step and train the network for 8 more epochs.
+images and their flipped versions and generated nearly 0.3M subsamples of size $224\times 224$ deterministically with a fixed step and train the network for 8 more epochs.
 Finally, they generated another 0.19M samples in a similar manner to the second step, but this time from the original images instead of the proposals. Spatial
-cross-entropy was used as an error criterion. The ratio of foreground to background weights in the cross-entropy calculation for the first step was 2.0 and 1.2
-for the later steps. In the test phase, they took dense 224 × 224 samples deterministically with fixed step from each of the test images and classified each pixel
+cross-entropy was used as an error criterion. The ratio of foreground to background weights in the cross-entropy calculation for the first step was $2.0$ and $1.2$
+for the later steps. In the test phase, they took dense $224 \times 224$ samples deterministically with fixed step from each of the test images and classified each pixel
 according to the aggregate probability on the samples. During the design of the network architecture, they experimented with adaptive operations to handle images
 of varying sizes, but they did not seem to work any better than resizing the images to a fixed size. In addition, they had to be cautious in choosing the size for
-the resize operation so that for larger images with resolution such as 2000 × 2500, the properties of the small leaf regions would not deteriorate much. Considering
-this fact, they chose the size of the modified image to be 448×448 while preserving the aspect ratio. After performing the resizing operation, each of the images was
+the resize operation so that for larger images with resolution such as $2000 \times 2500$, the properties of the small leaf regions would not deteriorate much. Considering
+this fact, they chose the size of the modified image to be $448\times 448$ while preserving the aspect ratio. After performing the resizing operation, each of the images was
 augmented 8 times using intensity saturation, Gaussian blur and sharpening, and additive Gaussian noise. Each image was also flipped from top to bottom and left to
 right and rotated. After data generation, the counting or regression network was trained for 40 epochs using Adam with a fixed learning rate. The authors found that
 their predictions can be accurate for easier samples with no leaf overlap or moderate leaf size or both, but deteriorate for more difficult cases with smaller or overlapping
@@ -456,8 +456,8 @@ They created two types of datasets using an RGB-D camera and a multiple RGB came
 \subsubsection{RGB-D Dataset}
 Since one RGB-D camera was attached to capture the entire part of the toolkit, each plant region was manually segmented as a plant image
 and labeled as a label image. In order to use the dataset for temporal leaf tracking, the same leaf label was assigned to the same leaf in
-images captured at different times. The original camera resolution was 640 × 480 and the resolution of the plant images was, for example,
-166 × 190 pixels. Because the viewpoints of the RGB and depth images were aligned by the camera library, the labels were valid for both images.
+images captured at different times. The original camera resolution was $640 \times 480$ and the resolution of the plant images was, for example,
+$166 \times 190$ pixels. Because the viewpoints of the RGB and depth images were aligned by the camera library, the labels were valid for both images.
 Due to the mismatch between RGB and depth camera, the resulting images were not aligned, so the depth image was aligned into an RGB image in their
 platform. For this reason, the authors provided the original depth image and a transformation matrix from the depth image viewpoint to the RGB image
 viewpoint so that the point cloud could also be transformed as needed without any interpolation.
@@ -479,10 +479,10 @@ of algal growth. Two-week-old plants (Arabidopsis and bean) were transferred to 
 LED illumination before beginning data collection. Different types of images were collected; fluorescence images were captured once every
 hour during the daylight period in a growth chamber. A series of five images were captured using a Hitachi KP-F145GV CCD camera, during
 a short period of bright light saturating photosynthesis provided by an array of white Cree LEDs. Fluorescence was excited using
-monochromatic red LEDs, collimated using Ledil reflector optics, and pulsed for 50 µ s during a short window when the white LEDs were
+monochromatic red LEDs, collimated using Ledil reflector optics, and pulsed for $50\mu s$ during a short window when the white LEDs were
 electronically turned off. Infrared images were collected once every hour with the same camera and filter used for chlorophyll a fluorescence.
-RGB color and depth images were collected using a Creative Senz3D sensor. The sensor contains both a 1280×720 color camera oriented parallel
-to, and separated approximately 25 mm from, a depth camera that has a resolution of 320×240 pixels. The depth sensor uses a near IR flash
+RGB color and depth images were collected using a Creative Senz3D sensor. The sensor contains both a $1280\times 720$ color camera oriented parallel
+to, and separated approximately 25 mm from, a depth camera that has a resolution of $320 \times 240$ pixels. The depth sensor uses a near IR flash
 illuminator and measures the time-of-flight of the beam in each pixel to obtain depth estimates in each pixel. Low-reflectivity surfaces,
 such as foam under plant leaves, are accurate only at close range. Image data, including fluorescence, IR reflectance, RGB color, and 3D depth images, were
 collected once every hour. Five minutes before the end of each hour, the 3D depth images and color image were captured using the Creative Senz3D sensor,
@@ -596,7 +596,7 @@ identifying the high probability areas of each target. Heatmap regression has be
 architecture is based on an encoding/decoding framework, in which a series of convolutional and spatial downsampling operations begin by computing a fixed-dimensional
 feature representation of the image. This feature space is then resampled to the original resolution. During training, random augmentation was applied with random
 rotation and scaling extracted from normal distributions with standard deviations. The network was trained end-to-end, from scratch, using RMSProp. The authors used
-a mean square error loss function with an initial learning rate of $2.5x10^{-4}$, and reduced by a factor of 10 every 200 epochs. Spike and spikelet positions
+a mean square error loss function with an initial learning rate of $2.5\times 10^{-4}$, and reduced by a factor of 10 every 200 epochs. Spike and spikelet positions
 are computed from each output heatmap using non-maximum suppression. For all output pixels, any pixel with an intensity greater than its four neighbors is classified
 as a feature. The number of additional false positives generated by the non-maximum suppression component of their approach is negligible. Accuracy represents the
 fraction of detections that are true positives. They applied a distance threshold for successful detection, then varied this threshold to explore the effectiveness

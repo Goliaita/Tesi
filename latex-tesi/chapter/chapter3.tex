@@ -68,7 +68,7 @@ With this, we are able to find out where the leaf is present in the image, so th
 finally obtain the 3D image with an rgb part and the fourth dimension, which is the depth. By means of a simple remapping we then obtain the xyz position on the camera plane.
 $$
 \begin{cases}
-    Z = z / depth_scale \\
+    Z = z / depth\_scale \\
     X = (x - cx) * Z / fx \\
     Y = (y - cy) * Z / fy
 \end{cases}
@@ -151,7 +151,7 @@ Finally mask are recombined, with prototype mask and mask coefficient branch, us
 A similar approach is taken with YOLACT++ \cite{2020}. It is based on the use of the deformed convolutional networks.
 Deformable Convolution Networks (DCNs)\cite{dai2017deformable}, \cite{zhu2019deformable} have proven to be effective for object detection, semantic segmentation, and
 instance segmentation due to its replacement of the rigid grid sampling used in conventional convnets with free-form sampling.
-YOLACT++ was designes following DCNv2, and replace the 3x3 convolution layer in each ResNet block with a 3x3 deformable convolution layer.
+YOLACT++ was designes following DCNv2, and replace the $3\times 3$ convolution layer in each ResNet block with a $3\times 3$ deformable convolution layer.
 Adding deformable convolution layers into the backbone of YOLACT, leads to a +1.8 mask mAP gain. The boost is due to DCN can strengthen the network’s capability of
 handling instances with different scales, rotations, and aspect ratios by aligning to the target instances, YOLACT does not have a re-sampling process.
  
