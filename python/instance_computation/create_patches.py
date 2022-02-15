@@ -15,7 +15,7 @@ def parse_args(argv=None):
                     help="Path to pytorch object detection weights")
 
     parser.add_argument("--instance_path", default="../yolact/weights/komatsuna_38_12000.pth", type=str,
-                    help="Path to pytorch object detection weights")
+                    help="Path to pytorch instance segmentation weights")
 
     parser.add_argument("--compute_label", default=False, action="store_true",
                     help="Chose if you are computing new boxes or not")
@@ -128,7 +128,7 @@ if __name__=="__main__":
             if box_list[idx,1]-box_list[idx,3] <= 6 or box_list[idx,2]-box_list[idx,4] <= 6:
                 subtract = 0
 
-            if box_list[idx,1]+box_list[idx,3] >= x+6 or box_list[idx,2]+box_list[idx,4] >= y+6:
+            if box_list[idx,1]+box_list[idx,3] >= x-6 or box_list[idx,2]+box_list[idx,4] >= y-6:
                 add = 0
 
             x_min = int(box_list[idx,1]-box_list[idx,3]-subtract)

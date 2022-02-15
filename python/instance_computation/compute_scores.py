@@ -4,6 +4,7 @@ from pycocotools.coco import COCO
 import argparse
 import numpy as np
 import json
+from torch import gt
 from tqdm import tqdm
 
 
@@ -51,12 +52,18 @@ def parse_args(argv=None):
 def compute_scores(args):
 
     computed_data = json.load(open(args.result_path))
+
+    category = 0
+
+    if type(computed_data) == dict:
+        computed_data = computed_data["annotations"]
+        category = 1
    
     gt_data = json.load(open(args.gt_path))
 
     coco_gt = COCO(args.gt_path)
         
-    gt_images = {"image_id": [], "dimensions": []}
+    gt_images = {"image_id": [], "dimensions": [], "file_name": []}
 
     gt_masks = {"masks": []}
 
@@ -70,19 +77,22 @@ def compute_scores(args):
     for image in gt_data["images"]:
         gt_images["image_id"].append(image["id"])
         gt_images["dimensions"].append([image["width"], image["height"]])
+        gt_images["file_name"].append(image["file_name"])
 
     for element in gt_data["annotations"]:
         x, y = gt_images["dimensions"][gt_images["image_id"].index(element["image_id"])]
         if element["category_id"] == 2:
             gt_masks["masks"].append({
                 "image_id": element["image_id"],
+                "image_name": gt_images["file_name"][gt_images["image_id"].index(element["image_id"])],
                 "segmentation": coco_gt.annToMask(element),
                 "category_id": element["category_id"],
                 "dimensions": [y, x]
             })
 
+    
     for element in computed_data:
-        if element["score"] > args.score and element["category_id"] == 2:
+        if element["score"] > args.score and element["category_id"] + category == 2:
             computed_masks["masks"].append({
                 "image_id": element["image_id"],
                 "segmentation": decode(element["segmentation"]),
@@ -115,6 +125,7 @@ def compute_scores(args):
         for _, gt_mask in enumerate(gt_masks["masks"]):
             
             if comp_mask["image_id"] == gt_mask["image_id"]:
+                
                 proposed_dice = dice_coef(gt_mask["segmentation"], comp_mask["segmentation"], smooth=0)
 
                 if dice < proposed_dice:
@@ -138,7 +149,7 @@ def compute_scores(args):
 
         for _, comp_mask in enumerate(computed_masks["masks"]):
             if comp_mask["image_id"] == gt_mask["image_id"]:
-
+                
                 symmetric_dice = dice_coef(comp_mask["segmentation"], gt_mask["segmentation"], smooth=0)
 
                 if sym < symmetric_dice:
@@ -169,9 +180,9 @@ if __name__ == "__main__":
     # dice_mean = compute_scores(args)
     
     if args.write:
-        output = open("results.txt", "w+")
-        # output.write(f"Symmetric Best Dice: {sym_mean}\n")
-        output.write(f"Best Dice: {dice_mean}\n")
+        with open("results.txt", "w+") as output:
+            # output.write(f"Symmetric Best Dice: {sym_mean}\n")
+            output.write(f"Best Dice: {dice_mean}\n")
 
     print()
     print(f"Symmetric Best Dice: {sym_mean}")
